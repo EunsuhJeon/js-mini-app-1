@@ -8,6 +8,7 @@ let time = 0;
 let moves = 0;
 let timerInterval = null;
 
+// Jade - start
 // ===========
 // == Pause ==
 // ===========
@@ -45,6 +46,11 @@ let timerInterval = null;
 // 3. Home 버튼 클릭
 // 3-1. index 페이지로 이동
 
+
+// Jade - end
+
+
+// Jose - start
 //======================
 //== select level ==
 //======================
@@ -75,3 +81,9 @@ function startGame() {
         // window.location.href = 'game.html'; // Uncomment when you have a game page
     }
 }
+
+// Jose - end
+
+// Santiago - start
+
+// Santiago - end
