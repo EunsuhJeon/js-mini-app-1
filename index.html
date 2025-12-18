@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Game - Emoji Edition</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body class="home-page">
+    <div class="emoji-background">
+        <div class="emoji">🎮</div>
+        <div class="emoji">🧠</div>
+        <div class="emoji">😎</div>
+        <div class="emoji">🎯</div>
+        <div class="emoji">🌟</div>
+        <div class="emoji">🚀</div>
+        <div class="emoji">💡</div>
+        <div class="emoji">⚡</div>
+    </div>
+
+    <div class="home-container">
+        <div class="home-content">
+            <h1>🎮 Memory Game</h1>
+            <p>Select a difficulty level and test your memory!</p>
+
+            <div class="difficulty-section">
+                <h2>Choose Difficulty:</h2>
+                <div class="difficulty-buttons">
+                    <button class="difficulty-btn" data-difficulty="easy" onclick="selectDifficulty('easy')">
+                        😊 Easy
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="medium" onclick="selectDifficulty('medium')">
+                        😐 Medium
+                    </button>
+                    <button class="difficulty-btn" data-difficulty="impossible" onclick="selectDifficulty('impossible')">
+                        😤 Impossible
+                    </button>
+                </div>
+            </div>
+
+            <button id="startBtn" class="start-btn" onclick="startGame()" disabled>
+                START GAME
+            </button>
+        </div>
+    </div>
+
+    <script src="scrip.js"></script>
+</body>
+</html>
