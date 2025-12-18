@@ -1,3 +1,32 @@
+// ===== HOME PAGE =====
+let selectedDifficulty = null;
+
+function selectDifficulty(difficulty) {
+    selectedDifficulty = difficulty;
+    
+    // Remove selected class from all buttons
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+    
+    // Add selected class to clicked button
+    event.target.closest('.difficulty-btn').classList.add('selected');
+    
+    // Enable start button
+    document.getElementById('startBtn').disabled = false;
+}
+
+function startGame() {
+    if (selectedDifficulty) {
+        // Store difficulty in sessionStorage for the game to use
+        sessionStorage.setItem('gameDifficulty', selectedDifficulty);
+        // You can navigate to the game page or initialize the game here
+        alert(`Starting ${selectedDifficulty} game!`);
+        // window.location.href = 'game.html'; // Uncomment when you have a game page
+    }
+}
+
+// ===== ORIGINAL CODE =====
 let gameStarted = false;
 let isPaused = false;
 let gameFinished = false;
@@ -42,3 +71,4 @@ let timerInterval = null;
 
 // 3. Home 버튼 클릭
 // 3-1. index 페이지로 이동
+
