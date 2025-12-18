@@ -7,6 +7,7 @@
 
 
 /* ===== ORIGINAL STYLES ===== */
+/* Jade - start */
 .overlay {
     position: fixed;
     inset: 0;
@@ -156,6 +157,7 @@
   background: #3a3a3a;
 }
 
+/* Jade - end */
 
 /* Jose */
 .home-page {
