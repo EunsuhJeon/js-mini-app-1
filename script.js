@@ -1,3 +1,4 @@
+
 // Jade - start
 let gameStarted = false;
 let isPaused = false;
@@ -39,7 +40,7 @@ function pauseTimer() {
 // == Pause ==
 // ===========
 // 1. when the user click Pause button
-pauseBtn.addEventListener('click', handlePause);
+//pauseBtn.addEventListener('click', handlePause);
 function handlePause(){
     // 1-1. remove 'hidden' class from 'pause-overlay'
     document.getElementById('pause-overlay').classList.remove('hidden');
@@ -51,7 +52,7 @@ function handlePause(){
 }
 
 // 2. when the user click Resume button
-resumeBtn.addEventListener('click', handleResume);
+//resumeBtn.addEventListener('click', handleResume);
 function handleResume(){
     // 2-1. add 'hidden' class to 'pause-overlay'
     document.getElementById('pause-overlay').classList.add('hidden');
@@ -61,7 +62,7 @@ function handleResume(){
 }
 
 // 3. when the user click Restart button
-restartBtn.addEventListener('click', handleRestart);
+//restartBtn.addEventListener('click', handleRestart);
 function handleRestart(){
     // 3-1. add 'hidden' to 
     document.getElementById('pause-overlay').classList.add('hidden');
@@ -72,7 +73,7 @@ function handleRestart(){
 }
 
 // 4. when the user click Home button
-menuBtn.addEventListener('click', handleMenu);
+//menuBtn.addEventListener('click', handleMenu);
 function handleMenu(){
     // 4-1. go to index page
     clearInterval(timerId);
@@ -102,9 +103,9 @@ function endGame() {
 // 2-2. call function - game start
 
 // 3. when the user click Home button
-document.getElementById('result-menu-btn').addEventListener('click', function(){
-    window.location.href = "index.html";
-});
+//document.getElementById('result-menu-btn').addEventListener('click', function(){
+  //  window.location.href = "index.html";
+//});
 
 // Jade - end
 
@@ -136,8 +137,8 @@ function startGame() {
         // Store difficulty in sessionStorage for the game to use
         sessionStorage.setItem('gameDifficulty', selectedDifficulty);
         // You can navigate to the game page or initialize the game here
-        alert(`Starting ${selectedDifficulty} game!`);
-        // window.location.href = 'game.html'; // Uncomment when you have a game page
+       // alert(`Starting ${selectedDifficulty} game!`);
+        window.location.href = './pages/game-normal-mode.html'; // Uncomment when you have a game page
     }
 }
 
