@@ -72,6 +72,62 @@
                 <img src="./images/board-images/emoji-5.png" alt="emoji-5">                
             </div>            
         </section>
+        
+        <!-- pause overlay -->
+        <div id="pause-overlay" class="overlay">
+            <div class="pause-modal">
+                <h2 class="pause-title">Game Paused</h2>
+                <div class="pause-info">
+                <div class="info-row">
+                    <span>Difficulty</span>
+                    <span id="pause-difficulty">Normal</span>
+                </div>
+                <div class="info-row">
+                    <span>Time</span>
+                    <span id="pause-time">00:00</span>
+                </div>
+                </div>
+                <div class="pause-buttons">
+                <button id="resume-btn">Resume</button>
+                <button id="restart-btn">Restart</button>
+                <button id="menu-btn">Home</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- result overlay -->
+        <div id="result-overlay" class="overlay">
+            <div class="result-modal alt">
+                <div class="result-header">
+                <h2 class="result-title">You Win!</h2>
+                <p class="result-subtitle">Great job blah blah</p>
+                </div>
+
+                <div class="result-stats">
+                    <div class="stat-box">
+                        <span class="stat-label">Time</span>
+                        <span class="stat-value" id="result-time">00:00</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Moves</span>
+                        <span class="stat-value" id="result-moves">0</span>
+                    </div>
+                    <div class="stat-box">
+                        <span class="stat-label">Difficulty</span>
+                        <span class="stat-value" id="result-difficulty">Normal</span>
+                    </div>
+                </div>
+
+                <div class="result-rating" id="result-rating">
+                ★★★
+                </div>
+
+                <div class="result-actions">
+                    <button id="play-again-btn">Play Again</button>
+                    <button id="result-menu-btn">Home</button>
+                </div>
+            </div>
+        </div>
     </main>        
 </body>
 </html>

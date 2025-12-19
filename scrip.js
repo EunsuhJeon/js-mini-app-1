@@ -1,51 +1,110 @@
-
-// ===== ORIGINAL CODE =====
+// Jade - start
 let gameStarted = false;
 let isPaused = false;
 let gameFinished = false;
 
-let time = 0;
-let moves = 0;
-let timerInterval = null;
+let startTime = null;
+let elapsedTime = 0;
+let timerId = null;
 
-// Jade - start
+// const pauseBtn = document.getElementById('일시정지');
+const resumeBtn = document.getElementById('resume-btn');
+const restartBtn = document.getElementById('restart-btn');
+const menuBtn = document.getElementById('menu-btn');
+
+// when the ingame page is loaded
+function startTimer() {
+    startTime = Date.now() - elapsedTime;
+    timerId = setInterval(updateTimer, 1000); // every second
+}
+
+function updateTimer() {
+    elapsedTime = Date.now() - startTime
+    renderTime(elapsedTime);
+}
+
+// update timer in game every second
+function renderTime(ms) {
+    const seconds = Math.floor(ms / 1000);
+    타이머영역요소.textContent = seconds;
+}
+
+function pauseTimer() {
+    if(!isPaused) return;
+    clearInterval(timerId);
+    elapsedTime = Date.now() - startTime;
+}
+
 // ===========
 // == Pause ==
 // ===========
-// 1. 일시정지 버튼 눌렀을 때 
-// 1-1. 오버레이 class 중에 hidden Remove
-// 1-2. 타이머 스탑
-// 1-3. 현재 시간, 모드 값 가져와서 text 넣기
+// 1. when the user click Pause button
+pauseBtn.addEventListener('click', handlePause);
+function handlePause(){
+    // 1-1. remove 'hidden' class from 'pause-overlay'
+    document.getElementById('pause-overlay').classList.remove('hidden');
+    // 1-2. stop timer and change value (isPaused=true)
+    isPaused = true;
+    pauseTimer();
+    // 1-3. update UI (elapsed time, difficulty ...)
+    document.getElementById('pause-difficulty').textContent = '난이도';
+}
 
-// 2. Resume 눌렀을 때
-// 2-1. 오버레이 class에 hidden 다시 넣고
-// 2-2. 타이머 멈춘 시점부터 재개
+// 2. when the user click Resume button
+resumeBtn.addEventListener('click', handleResume);
+function handleResume(){
+    // 2-1. add 'hidden' class to 'pause-overlay'
+    document.getElementById('pause-overlay').classList.add('hidden');
+    // 2-2. restart timer
+    startTimer();
+    isPaused = false;
+}
 
-// 3. Restart 눌렀을 때
-// 3-1. 오버레이 class에 hidden 다시 넣고
-// 3-2. 카드 재배치, 재 셋팅
-// 3-2. 타이머 재개
+// 3. when the user click Restart button
+restartBtn.addEventListener('click', handleRestart);
+function handleRestart(){
+    // 3-1. add 'hidden' to 
+    document.getElementById('pause-overlay').classList.add('hidden');
+    isPaused = false;
+    // call the function - game start
+    // 3-2. reset
+    // 3-2. start timer
+}
 
-// 4. Home 버튼 눌렀을 때
-// 4-1. index 페이지로 이동
+// 4. when the user click Home button
+menuBtn.addEventListener('click', handleMenu);
+function handleMenu(){
+    // 4-1. go to index page
+    clearInterval(timerId);
+    isPaused = false;
+    window.location.href = "index.html";
+}
 
 
 // ============
 // == Result ==
 // ============
-// 1. 카드 다 매칭됐을 때
-// 1-1. 타이머 멈추고
-// 1-2. 오버레이 히든 제거
-// 1-3. 별점 계산 함수 호출
-// 1-4. 결과값 채워넣기
+// 1. When the game finish
+function endGame() {
+    // 1-1. Stop timer
+    clearInterval(timerId);
+    const seconds = Math.floor(elapsedTime / 1000);
+    // 1-2. make result overlay visible
+    document.getElementById('result-overlay').classList.remove('hidden');
+    // 1-3. call function which calculates rating
 
-// 2. Play Agin 버튼 클릭했을 때
-// 2-1. 오버레이에 히든 넣고
-// 2-2. 게임 초기셋팅함수 호출
+    // 1-4. update UI
+    document.getElementById('result-time').textContent = seconds;
+}
 
-// 3. Home 버튼 클릭
-// 3-1. index 페이지로 이동
+// 2. when the user click Play Again button
+// 2-1. add 'hidden' class to result
+// 2-2. call function - game start
 
+// 3. when the user click Home button
+document.getElementById('result-menu-btn').addEventListener('click', function(){
+    window.location.href = "index.html";
+});
 
 // Jade - end
 
