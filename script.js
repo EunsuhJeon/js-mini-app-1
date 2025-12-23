@@ -31,7 +31,7 @@ function startTimer() {
 
 function updateTimer() {
     elapsedTime = Date.now() - startTime
-    renderTime(elapsedTime);
+    document.getElementById('time').textContent = renderTime(elapsedTime);
 }
 
 // update timer in game every second
@@ -43,7 +43,7 @@ function renderTime(ms) {
     const formattedMinutes = String(minutes).padStart(2, '0');
     const formattedSeconds = String(seconds).padStart(2, '0');
 
-    document.getElementById('time').textContent = `${formattedMinutes}:${formattedSeconds}`;
+    return `${formattedMinutes}:${formattedSeconds}`;
 }
 
 function pauseTimer() {
@@ -66,6 +66,7 @@ if(pauseBtn){
         pauseTimer();
         // 1-3. update UI (elapsed time, difficulty ...)
         // document.getElementById('pause-difficulty').textContent = '난이도';
+        document.getElementById('pause-time').textContent = renderTime(elapsedTime);
     }
 }
 
@@ -76,7 +77,7 @@ if(resumeBtn){
         // 2-1. add 'hidden' class to 'pause-overlay'
         document.getElementById('pause-overlay').classList.add('hidden');
         // 2-2. restart timer
-        // startTimer();
+        startTimer();
         isPaused = false;
     }
 }
@@ -90,7 +91,9 @@ if(restartBtn){
         isPaused = false;
         // call the function - game start
         // 3-2. reset
-        // 3-2. start timer
+        elapsedTime = 0;
+        // 3-3. start timer
+        startTimer();
     }
 }
 
@@ -99,7 +102,7 @@ if(menuBtn){
     menuBtn.addEventListener('click', handleMenu);
     function handleMenu(){
         // 4-1. go to index page
-        // clearInterval(timerId);
+        clearInterval(timerId);
         isPaused = false;
         window.location.href = "../index.html";
     }
