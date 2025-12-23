@@ -13,6 +13,14 @@ const resumeBtn = document.getElementById('resume-btn');
 const restartBtn = document.getElementById('restart-btn');
 const menuBtn = document.getElementById('menu-btn');
 
+window.addEventListener("DOMContentLoaded", () => {
+    const level = sessionStorage.getItem("gameDifficulty");
+    if (level) {
+        // 필요하면 level 변수 사용
+        startTimer();
+    }
+});
+
 // when the ingame page is loaded
 function startTimer() {
     startTime = Date.now() - elapsedTime;
@@ -26,8 +34,14 @@ function updateTimer() {
 
 // update timer in game every second
 function renderTime(ms) {
-    const seconds = Math.floor(ms / 1000);
-    document.getElementById('time').textContent = seconds;
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+
+    document.getElementById('time').textContent = `${formattedMinutes}:${formattedSeconds}`;
 }
 
 function pauseTimer() {
