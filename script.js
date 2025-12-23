@@ -8,7 +8,7 @@ let startTime = null;
 let elapsedTime = 0;
 let timerId = null;
 
-// const pauseBtn = document.getElementById('일시정지');
+const pauseBtn = document.getElementById('pause-btn');
 const resumeBtn = document.getElementById('resume-btn');
 const restartBtn = document.getElementById('restart-btn');
 const menuBtn = document.getElementById('menu-btn');
@@ -27,7 +27,7 @@ function updateTimer() {
 // update timer in game every second
 function renderTime(ms) {
     const seconds = Math.floor(ms / 1000);
-    타이머영역요소.textContent = seconds;
+    document.getElementById('time').textContent = seconds;
 }
 
 function pauseTimer() {
@@ -40,45 +40,53 @@ function pauseTimer() {
 // == Pause ==
 // ===========
 // 1. when the user click Pause button
-//pauseBtn.addEventListener('click', handlePause);
-function handlePause(){
-    // 1-1. remove 'hidden' class from 'pause-overlay'
-    document.getElementById('pause-overlay').classList.remove('hidden');
-    // 1-2. stop timer and change value (isPaused=true)
-    isPaused = true;
-    pauseTimer();
-    // 1-3. update UI (elapsed time, difficulty ...)
-    document.getElementById('pause-difficulty').textContent = '난이도';
+if(pauseBtn){
+    pauseBtn.addEventListener('click', handlePause);
+    function handlePause(){
+        // 1-1. remove 'hidden' class from 'pause-overlay'
+        document.getElementById('pause-overlay').classList.remove('hidden');
+        // 1-2. stop timer and change value (isPaused=true)
+        isPaused = true;
+        pauseTimer();
+        // 1-3. update UI (elapsed time, difficulty ...)
+        // document.getElementById('pause-difficulty').textContent = '난이도';
+    }
 }
 
 // 2. when the user click Resume button
-//resumeBtn.addEventListener('click', handleResume);
-function handleResume(){
-    // 2-1. add 'hidden' class to 'pause-overlay'
-    document.getElementById('pause-overlay').classList.add('hidden');
-    // 2-2. restart timer
-    startTimer();
-    isPaused = false;
+if(resumeBtn){
+    resumeBtn.addEventListener('click', handleResume);
+    function handleResume(){
+        // 2-1. add 'hidden' class to 'pause-overlay'
+        document.getElementById('pause-overlay').classList.add('hidden');
+        // 2-2. restart timer
+        // startTimer();
+        isPaused = false;
+    }
 }
 
 // 3. when the user click Restart button
-//restartBtn.addEventListener('click', handleRestart);
-function handleRestart(){
-    // 3-1. add 'hidden' to 
-    document.getElementById('pause-overlay').classList.add('hidden');
-    isPaused = false;
-    // call the function - game start
-    // 3-2. reset
-    // 3-2. start timer
+if(restartBtn){
+    restartBtn.addEventListener('click', handleRestart);
+    function handleRestart(){
+        // 3-1. add 'hidden' to 
+        document.getElementById('pause-overlay').classList.add('hidden');
+        isPaused = false;
+        // call the function - game start
+        // 3-2. reset
+        // 3-2. start timer
+    }
 }
 
 // 4. when the user click Home button
-//menuBtn.addEventListener('click', handleMenu);
-function handleMenu(){
-    // 4-1. go to index page
-    clearInterval(timerId);
-    isPaused = false;
-    window.location.href = "index.html";
+if(menuBtn){
+    menuBtn.addEventListener('click', handleMenu);
+    function handleMenu(){
+        // 4-1. go to index page
+        // clearInterval(timerId);
+        isPaused = false;
+        window.location.href = "../index.html";
+    }
 }
 
 
@@ -88,7 +96,7 @@ function handleMenu(){
 // 1. When the game finish
 function endGame() {
     // 1-1. Stop timer
-    clearInterval(timerId);
+    // clearInterval(timerId);
     const seconds = Math.floor(elapsedTime / 1000);
     // 1-2. make result overlay visible
     document.getElementById('result-overlay').classList.remove('hidden');
