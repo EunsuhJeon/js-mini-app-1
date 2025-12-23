@@ -14,10 +14,12 @@ const restartBtn = document.getElementById('restart-btn');
 const menuBtn = document.getElementById('menu-btn');
 
 window.addEventListener("DOMContentLoaded", () => {
-    const level = sessionStorage.getItem("gameDifficulty");
-    if (level) {
-        // 필요하면 level 변수 사용
-        startTimer();
+    const currentPage = window.location.pathname;
+    if (!currentPage.includes("index.html")) {
+        const level = sessionStorage.getItem("gameDifficulty");
+        if (level) {
+            startTimer();
+        }
     }
 });
 
