@@ -8,10 +8,15 @@ let startTime = null;
 let elapsedTime = 0;
 let timerId = null;
 
-const pauseBtn = document.getElementById('pause-btn');
-const resumeBtn = document.getElementById('resume-btn');
-const restartBtn = document.getElementById('restart-btn');
-const menuBtn = document.getElementById('menu-btn');
+window.addEventListener("DOMContentLoaded", () => {
+    const currentPage = window.location.pathname;
+    if (!currentPage.includes("index.html")) {
+        const level = sessionStorage.getItem("gameDifficulty");
+        if (level) {
+            startTimer();
+        }
+    }
+});
 
 // when the ingame page is loaded
 function startTimer() {
@@ -21,13 +26,19 @@ function startTimer() {
 
 function updateTimer() {
     elapsedTime = Date.now() - startTime
-    renderTime(elapsedTime);
+    document.getElementById('time').textContent = renderTime(elapsedTime);
 }
 
 // update timer in game every second
 function renderTime(ms) {
-    const seconds = Math.floor(ms / 1000);
-    document.getElementById('time').textContent = seconds;
+    const totalSeconds = Math.floor(ms / 1000);
+    const minutes = Math.floor(totalSeconds / 60);
+    const seconds = totalSeconds % 60;
+
+    const formattedMinutes = String(minutes).padStart(2, '0');
+    const formattedSeconds = String(seconds).padStart(2, '0');
+
+    return `${formattedMinutes}:${formattedSeconds}`;
 }
 
 function pauseTimer() {
@@ -40,53 +51,50 @@ function pauseTimer() {
 // == Pause ==
 // ===========
 // 1. when the user click Pause button
-if(pauseBtn){
-    pauseBtn.addEventListener('click', handlePause);
-    function handlePause(){
-        // 1-1. remove 'hidden' class from 'pause-overlay'
-        document.getElementById('pause-overlay').classList.remove('hidden');
-        // 1-2. stop timer and change value (isPaused=true)
-        isPaused = true;
-        pauseTimer();
-        // 1-3. update UI (elapsed time, difficulty ...)
-        // document.getElementById('pause-difficulty').textContent = '난이도';
-    }
+document.getElementById('pause-btn')?.addEventListener('click', handlePause);
+function handlePause(){
+    // 1-1. remove 'hidden' class from 'pause-overlay'
+    document.getElementById('pause-overlay').classList.remove('hidden');
+    // 1-2. stop timer and change value (isPaused=true)
+    isPaused = true;
+    pauseTimer();
+    // 1-3. update UI (elapsed time, difficulty ...)
+    // document.getElementById('pause-difficulty').textContent = '난이도';
+    document.getElementById('pause-time').textContent = renderTime(elapsedTime);
+    document.getElementById('pause-difficulty').textContent = sessionStorage.getItem("gameDifficulty");
 }
 
+
 // 2. when the user click Resume button
-if(resumeBtn){
-    resumeBtn.addEventListener('click', handleResume);
-    function handleResume(){
-        // 2-1. add 'hidden' class to 'pause-overlay'
-        document.getElementById('pause-overlay').classList.add('hidden');
-        // 2-2. restart timer
-        // startTimer();
-        isPaused = false;
-    }
+document.getElementById('resume-btn')?.addEventListener('click', handleResume);
+function handleResume(){
+    // 2-1. add 'hidden' class to 'pause-overlay'
+    document.getElementById('pause-overlay').classList.add('hidden');
+    // 2-2. restart timer
+    startTimer();
+    isPaused = false;
 }
 
 // 3. when the user click Restart button
-if(restartBtn){
-    restartBtn.addEventListener('click', handleRestart);
-    function handleRestart(){
-        // 3-1. add 'hidden' to 
-        document.getElementById('pause-overlay').classList.add('hidden');
-        isPaused = false;
-        // call the function - game start
-        // 3-2. reset
-        // 3-2. start timer
-    }
+document.getElementById('restart-btn')?.addEventListener('click', handleRestart);
+function handleRestart(){
+    // 3-1. add 'hidden' to 
+    document.getElementById('pause-overlay').classList.add('hidden');
+    isPaused = false;
+    // call the function - game start
+    // 3-2. reset
+    elapsedTime = 0;
+    // 3-3. start timer
+    startTimer();
 }
 
 // 4. when the user click Home button
-if(menuBtn){
-    menuBtn.addEventListener('click', handleMenu);
-    function handleMenu(){
-        // 4-1. go to index page
-        // clearInterval(timerId);
-        isPaused = false;
-        window.location.href = "../index.html";
-    }
+document.getElementById('menu-btn')?.addEventListener('click', handleMenu);
+function handleMenu(){
+    // 4-1. go to index page
+    clearInterval(timerId);
+    isPaused = false;
+    window.location.href = "../index.html";
 }
 
 
@@ -96,24 +104,27 @@ if(menuBtn){
 // 1. When the game finish
 function endGame() {
     // 1-1. Stop timer
-    // clearInterval(timerId);
-    const seconds = Math.floor(elapsedTime / 1000);
+    clearInterval(timerId);
     // 1-2. make result overlay visible
     document.getElementById('result-overlay').classList.remove('hidden');
     // 1-3. call function which calculates rating
-
+    
     // 1-4. update UI
-    document.getElementById('result-time').textContent = seconds;
+    document.getElementById('result-time').textContent = renderTime(elapsedTime);
 }
 
 // 2. when the user click Play Again button
-// 2-1. add 'hidden' class to result
-// 2-2. call function - game start
+document.getElementById('play-again-btn')?.addEventListener('click', handlePlayAgain)
+function handlePlayAgain(){
+    // 2-1. add 'hidden' class to result
+    document.getElementById('result-overlay').classList.add('hidden');
+    // 2-2. call function - game start
+}
 
 // 3. when the user click Home button
-//document.getElementById('result-menu-btn').addEventListener('click', function(){
-  //  window.location.href = "index.html";
-//});
+document.getElementById('result-menu-btn')?.addEventListener('click', function(){
+   window.location.href = "../index.html";
+});
 
 // Jade - end
 
