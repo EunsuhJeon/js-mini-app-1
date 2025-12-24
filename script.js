@@ -317,3 +317,56 @@ window.addEventListener('click', (e) => {
 // Santiago - start
 
 // Santiago - end
+
+// GIF Character Messages - Caracteres con mensajes
+const characterMessages = [
+    "¡Great job! 🎉",
+    "You're doing amazing!",
+    "Keep going! 💪",
+    "Nice move! 👍",
+    "Awesome! ⭐",
+    "You got this! 🚀",
+    "Fantastic! 🌟",
+    "Way to go! 🎯",
+    "Impressive! 💡",
+    "Excellent work! 🏆"
+];
+
+let messageIndex = 0;
+
+// Get elements
+const gifCharacter = document.getElementById('gif-character');
+const messageBubble = document.getElementById('message-bubble');
+const messageText = document.getElementById('message-text');
+
+// Click on gif to show random message
+if (gifCharacter) {
+    gifCharacter.addEventListener('click', () => {
+        showRandomMessage();
+    });
+}
+
+function showRandomMessage() {
+    // Get random message
+    const randomIndex = Math.floor(Math.random() * characterMessages.length);
+    const message = characterMessages[randomIndex];
+    
+    // Display message
+    messageText.textContent = message;
+    messageBubble.classList.remove('hidden');
+    
+    // Hide message after 3 seconds
+    setTimeout(() => {
+        messageBubble.classList.add('hidden');
+    }, 3000);
+}
+
+// Optional: Show message when game starts
+window.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('gif-character')) {
+        // Show initial message after 1 second
+        setTimeout(() => {
+            showRandomMessage();
+        }, 1000);
+    }
+});
