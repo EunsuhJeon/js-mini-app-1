@@ -116,15 +116,15 @@ select{
 /* BOARD 4x3 */
 .board {
   display: grid;
-  grid-template-columns: repeat(4, 96px); /* 4 columnas */
-  gap: 16px;
+  grid-template-columns: repeat(4, 96px);
+  gap: 46px;
 }
 
 /* CARD */
 .card {
-  width: 96px;
-  height: 96px;
-  background: linear-gradient(135deg, #1e293b, #334155);
+  width: 126px;
+  height: 160px;
+  background: linear-gradient(135deg, #427fe1, #84b5f9);
   border-radius: 16px;
   display: flex;
   align-items: center;
