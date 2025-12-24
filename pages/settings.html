@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Settings - Memory Game</title>
+    <link rel="stylesheet" href="../style.css">
+</head>
+<body class="settings-page">
+    <div class="emoji-background">
+        <div class="emoji">🎮</div>
+        <div class="emoji">🧠</div>
+        <div class="emoji">😎</div>
+        <div class="emoji">🎯</div>
+        <div class="emoji">🌟</div>
+        <div class="emoji">🚀</div>
+        <div class="emoji">💡</div>
+        <div class="emoji">⚡</div>
+    </div>
+
+    <div class="settings-container">
+        <div class="settings-content">
+            <h1>⚙️ Settings</h1>
+
+            <div class="settings-section">
+                <h2>Audio Controls</h2>
+                
+                <div class="control-group">
+                    <label for="musicVolume">🎵 Music Volume</label>
+                    <div class="slider-container">
+                        <input 
+                            type="range" 
+                            id="musicVolume" 
+                            min="0" 
+                            max="100" 
+                            value="70" 
+                            class="volume-slider"
+                            oninput="updateMusicVolume(this.value)"
+                        >
+                        <span id="musicVolumeValue" class="volume-value">70%</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label for="soundVolume">🔊 Sound Effects Volume</label>
+                    <div class="slider-container">
+                        <input 
+                            type="range" 
+                            id="soundVolume" 
+                            min="0" 
+                            max="100" 
+                            value="80" 
+                            class="volume-slider"
+                            oninput="updateSoundVolume(this.value)"
+                        >
+                        <span id="soundVolumeValue" class="volume-value">80%</span>
+                    </div>
+                </div>
+
+                <div class="control-group">
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            id="musicToggle" 
+                            checked
+                            onchange="toggleMusic()"
+                        >
+                        Enable Music
+                    </label>
+                </div>
+
+                <div class="control-group">
+                    <label>
+                        <input 
+                            type="checkbox" 
+                            id="soundToggle" 
+                            checked
+                            onchange="toggleSound()"
+                        >
+                        Enable Sound Effects
+                    </label>
+                </div>
+            </div>
+
+            <div class="settings-buttons">
+                <button class="back-btn" onclick="goBack()">← Back to Home</button>
+                <button class="reset-btn" onclick="resetSettings()">Reset to Default</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="../script.js"></script>
+</body>
+</html>
