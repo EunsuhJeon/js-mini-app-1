@@ -175,6 +175,13 @@ function endGame() {
     document.getElementById('result-time').textContent = renderTime(elapsedTime);
     document.getElementById('result-moves').textContent = movements;
     document.getElementById('result-difficulty').textContent = sessionStorage.getItem("gameDifficulty");
+
+    let starsCount = calculateStars(elapsedTime, movements, pairs);
+    let stars = '';
+    for (let index = 0; index < starsCount; index++) {
+        stars += '⭐️';
+    }
+    document.getElementById('result-rating').textContent = stars;
 }
 
 // 2. when the user click Play Again button
@@ -194,6 +201,22 @@ function handlePlayAgain(){
 document.getElementById('result-menu-btn')?.addEventListener('click', function(){
    window.location.href = "../index.html";
 });
+
+function calculateStars(timeMs, moves, pairs) {
+    const baseTimePerPair = 8000;
+    const baseMovesPerPair = 2;
+
+    const timeScore = timeMs / (pairs * baseTimePerPair);
+    const moveScore = moves / (pairs * baseMovesPerPair);
+
+    const averageScore = (timeScore + moveScore) / 2;
+
+    let stars = 3;
+    if (averageScore > 1.5) stars = 1;
+    else if (averageScore > 1.0) stars = 2;
+
+    return stars;
+}
 
 // Jade - end
 
