@@ -3,8 +3,8 @@
 }
 
 :root{
-  --card-width: 7.5rem;    /* 120px */
-  --card-height: 11.25rem; /* 180px */
+  --card-width: 6.5rem;    /* 120px */
+  --card-height: 9.25rem; /* 180px */
   --card-gap: 1rem;        /* 16px */
   --bg: #0b1020;
   --panel: rgba(89,119,214,.60);
