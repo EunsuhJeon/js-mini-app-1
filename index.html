@@ -18,6 +18,11 @@
         <div class="emoji">⚡</div>
     </div>
 
+    <div class="top-controls">
+        <button id="settings-btn" class="settings-btn" title="Settings">⚙️</button>
+        <button id="credits-btn" class="credits-btn" title="Credits">ℹ️</button>
+    </div>
+
     <div class="home-container">
         <div class="home-content">
             <h1>🎮 Memory Game</h1>
@@ -43,6 +48,27 @@
             </button>
         </div>
     </div>
+
+    <!-- Credits Overlay -->
+    <div id="creditsOverlay" class="overlay hidden">
+        <div class="credits-modal">
+            <div class="credits-header">
+                <h2>Credits</h2>
+                <button class="close-btn" onclick="closeCredits()">&times;</button>
+            </div>
+            <div class="credits-content">
+                <p><strong>Game Developer:</strong> José</p>
+                <p><strong>Version:</strong> 1.0</p>
+                <p><strong>Created with:</strong> HTML, CSS & JavaScript</p>
+                <p>Thank you for playing!</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Music -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="./Audio/YoshiAudio.mp3" type="audio/mpeg">
+    </audio>
 
     <script src="./script.js"></script>
 </body>

@@ -128,14 +128,27 @@
                 </div>
             </div>
         </div>
+        <!-- Gif with messages (bottom right) -->
+        <div id="gif-container" class="gif-container">
+             <div id="message-bubble" class="message-bubble hidden">
+                <p id="message-text"></p>
+            </div>
+            <img id="gif-character" src="../images/parrot.gif" alt="Character">
+           
+        </div>
     </main>
     
     
 
 
     <footer>
-        <div><button id="pause-btn">||</button></div>
+        <div><button id="pause-btn">⏸️</button></div>
     </footer>
     <script src="../script.js"></script>
+
+       <!-- Background Music -->
+    <audio id="backgroundMusic" loop preload="auto">
+        <source src="../Audio/YoshiAudio.mp3" type="audio/mpeg">
+    </audio>
 </body>
 </html>

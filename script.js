@@ -161,8 +161,212 @@ function startGame() {
     }
 }
 
+// ===== SETTINGS & CREDITS FUNCTIONS =====
+// Audio Settings
+let audioSettings = {
+    musicVolume: localStorage.getItem('musicVolume') || 70,
+    soundVolume: localStorage.getItem('soundVolume') || 80,
+    musicEnabled: localStorage.getItem('musicEnabled') !== 'false',
+    soundEnabled: localStorage.getItem('soundEnabled') !== 'false'
+};
+
+// Load settings on page load
+window.addEventListener('DOMContentLoaded', () => {
+    loadSettings();
+    loadAudioSettings();
+    initBackgroundMusic();
+});
+
+function loadSettings() {
+    const settingsBtn = document.getElementById('settings-btn');
+    const creditsBtn = document.getElementById('credits-btn');
+    
+    if (settingsBtn) {
+        settingsBtn.addEventListener('click', () => {
+            window.location.href = './pages/settings.html';
+        });
+    }
+    
+    if (creditsBtn) {
+        creditsBtn.addEventListener('click', openCredits);
+    }
+}
+
+function loadAudioSettings() {
+    const musicVol = document.getElementById('musicVolume');
+    const soundVol = document.getElementById('soundVolume');
+    const musicToggle = document.getElementById('musicToggle');
+    const soundToggle = document.getElementById('soundToggle');
+    
+    if (musicVol) {
+        musicVol.value = audioSettings.musicVolume;
+        document.getElementById('musicVolumeValue').textContent = audioSettings.musicVolume + '%';
+    }
+    
+    if (soundVol) {
+        soundVol.value = audioSettings.soundVolume;
+        document.getElementById('soundVolumeValue').textContent = audioSettings.soundVolume + '%';
+    }
+    
+    if (musicToggle) {
+        musicToggle.checked = audioSettings.musicEnabled;
+    }
+    
+    if (soundToggle) {
+        soundToggle.checked = audioSettings.soundEnabled;
+    }
+}
+
+function updateMusicVolume(value) {
+    audioSettings.musicVolume = value;
+    localStorage.setItem('musicVolume', value);
+    document.getElementById('musicVolumeValue').textContent = value + '%';
+    const bgMusic = document.getElementById('backgroundMusic');
+    if (bgMusic) {
+        bgMusic.volume = value / 100;
+    }
+    console.log('Music volume set to:', value + '%');
+}
+
+function updateSoundVolume(value) {
+    audioSettings.soundVolume = value;
+    localStorage.setItem('soundVolume', value);
+    document.getElementById('soundVolumeValue').textContent = value + '%';
+    console.log('Sound effects volume set to:', value + '%');
+}
+
+function toggleMusic() {
+    const isEnabled = document.getElementById('musicToggle').checked;
+    audioSettings.musicEnabled = isEnabled;
+    localStorage.setItem('musicEnabled', isEnabled);
+    const bgMusic = document.getElementById('backgroundMusic');
+    if (bgMusic) {
+        if (isEnabled) {
+            bgMusic.play().catch(e => console.log('Autoplay prevented'));
+        } else {
+            bgMusic.pause();
+        }
+    }
+    console.log('Music', isEnabled ? 'enabled' : 'disabled');
+}
+
+function toggleSound() {
+    const isEnabled = document.getElementById('soundToggle').checked;
+    audioSettings.soundEnabled = isEnabled;
+    localStorage.setItem('soundEnabled', isEnabled);
+    console.log('Sound effects', isEnabled ? 'enabled' : 'disabled');
+}
+
+function resetSettings() {
+    audioSettings = {
+        musicVolume: 70,
+        soundVolume: 80,
+        musicEnabled: true,
+        soundEnabled: true
+    };
+    
+    localStorage.setItem('musicVolume', 70);
+    localStorage.setItem('soundVolume', 80);
+    localStorage.setItem('musicEnabled', 'true');
+    localStorage.setItem('soundEnabled', 'true');
+    
+    loadAudioSettings();
+    alert('Settings reset to default!');
+}
+
+function initBackgroundMusic() {
+    const bgMusic = document.getElementById('backgroundMusic');
+    if (!bgMusic) return;
+    
+    bgMusic.volume = audioSettings.musicVolume / 100;
+    
+    if (audioSettings.musicEnabled) {
+        bgMusic.play().catch(e => console.log('Autoplay prevented'));
+    }
+}
+
+function goBack() {
+    window.location.href = '../index.html';
+}
+
+function openCredits() {
+    const overlay = document.getElementById('creditsOverlay');
+    if (overlay) {
+        overlay.classList.remove('hidden');
+    }
+}
+
+function closeCredits() {
+    const overlay = document.getElementById('creditsOverlay');
+    if (overlay) {
+        overlay.classList.add('hidden');
+    }
+}
+
+// Close credits overlay when clicking outside
+window.addEventListener('click', (e) => {
+    const overlay = document.getElementById('creditsOverlay');
+    if (overlay && e.target === overlay) {
+        closeCredits();
+    }
+});
 // Jose - end
+
+
 
 // Santiago - start
 
 // Santiago - end
+
+// GIF Character Messages - Caracteres con mensajes
+const characterMessages = [
+    "¡Great job! 🎉",
+    "You're doing amazing!",
+    "Keep going! 💪",
+    "Nice move! 👍",
+    "Awesome! ⭐",
+    "You got this! 🚀",
+    "Fantastic! 🌟",
+    "Way to go! 🎯",
+    "Impressive! 💡",
+    "Excellent work! 🏆"
+];
+
+let messageIndex = 0;
+
+// Get elements
+const gifCharacter = document.getElementById('gif-character');
+const messageBubble = document.getElementById('message-bubble');
+const messageText = document.getElementById('message-text');
+
+// Click on gif to show random message
+if (gifCharacter) {
+    gifCharacter.addEventListener('click', () => {
+        showRandomMessage();
+    });
+}
+
+function showRandomMessage() {
+    // Get random message
+    const randomIndex = Math.floor(Math.random() * characterMessages.length);
+    const message = characterMessages[randomIndex];
+    
+    // Display message
+    messageText.textContent = message;
+    messageBubble.classList.remove('hidden');
+    
+    // Hide message after 3 seconds
+    setTimeout(() => {
+        messageBubble.classList.add('hidden');
+    }, 3000);
+}
+
+// Optional: Show message when game starts
+window.addEventListener('DOMContentLoaded', () => {
+    if (document.getElementById('gif-character')) {
+        // Show initial message after 1 second
+        setTimeout(() => {
+            showRandomMessage();
+        }, 1000);
+    }
+});
