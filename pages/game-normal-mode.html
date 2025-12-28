@@ -26,7 +26,13 @@
 
   <header class="top">
     <div class="brand">
-      <h1> 🥸 Emoji Memory Game</h1>
+      <div class="title-box">
+        <h1> 🥸 Emoji Memory Game</h1>
+        <button id="pause-btn">
+            <span class="bar"></span>
+            <span class="bar"></span>
+        </button>
+      </div>
       <p>Find all the pairs</p>
     </div>
 
@@ -79,7 +85,7 @@
       <div class="result-modal alt">
         <div class="result-header">
           <h2 class="result-title">You Win!</h2>
-          <p class="result-subtitle">Great job blah blah</p>
+          <p class="result-subtitle">Great job</p>
         </div>
 
         <div class="result-stats">
@@ -97,7 +103,7 @@
           </div>
         </div>
 
-        <div class="result-rating" id="result-rating">★★★</div>
+        <div class="result-rating" id="result-rating"></div>
 
         <div class="result-actions">
           <button id="play-again-btn">Play Again</button>
@@ -116,9 +122,9 @@
   </main>
 
   <footer>
-    <div>
+    <!-- <div>
       <button id="pause-btn">||</button>
-    </div>
+    </div> -->
   </footer>
 
   <script src="../script.js"></script>
