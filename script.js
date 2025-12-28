@@ -315,7 +315,58 @@ window.addEventListener('click', (e) => {
 
 
 // Santiago - start
+document.addEventListener('DOMContentLoaded', () => {
+    const board = document.getElementById('board');
+    if (!board) return;
 
+    const emojis = [
+        "😈","😭","🤑","🤮","😍","😡","😂","🤯","🥶","😱","🤩","😏",
+        "😇","🤔","😴","🥳","😜","😢","😎","🤡","👻","💀","☠️","🤖"
+    ];
+
+    let difficulty = sessionStorage.getItem("gameDifficulty") || "easy";
+    let rows, columns, pairs;
+
+    switch(difficulty){
+        case "easy":
+            rows = 3; columns = 4; pairs = 6; // 4x3
+            break;
+        case "medium":
+            rows = 3; columns = 6; pairs = 9; // 6x3
+            break;
+        case "impossible":
+            rows = 3; columns = 10; pairs = 15; // 10x3
+            break;
+        default:
+            rows = 3; columns = 4; pairs = 6;
+    }
+
+    const totalCards = pairs*2;
+
+    board.style.gridTemplateColumns = `repeat(${columns}, var(--card-width))`;
+    board.style.gridTemplateRows = `repeat(${rows}, var(--card-height))`;
+
+    let selectedEmojis = emojis.slice(0, pairs);
+    let cardImages = [];
+    selectedEmojis.forEach(emoji => { cardImages.push(emoji); cardImages.push(emoji); });
+
+    for (let i = cardImages.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [cardImages[i], cardImages[j]] = [cardImages[j], cardImages[i]];
+    }
+
+    cardImages.forEach(emoji => {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `
+            <div class="card-inner">
+                <div class="card-front">?</div>
+                <div class="card-back"><span class="card-back-emoji">${emoji}</span></div>
+            </div>`;
+        card.addEventListener('click', () => card.classList.toggle('flipped'));
+        board.appendChild(card);
+    });
+});
 // Santiago - end
 
 // GIF Character Messages - Caracteres con mensajes
