@@ -28,6 +28,13 @@ function flipCard() {
     if (flippedCards.includes(this)) return;
 
     if (flippedCards.length < 2 && !this.classList.contains("flipped")) {
+        // Play click sound
+        if (audioSettings.soundEnabled) {
+            const clickSound = new Audio('../Audio/clickselect.mp3');
+            clickSound.volume = audioSettings.soundVolume / 100;
+            clickSound.play().catch(e => console.log('Audio playback prevented'));
+        }
+
         this.classList.add("flipped");
         // this.querySelector('.card-back-emoji').style.visibility = "visible";
         // this.querySelector('.card-front').style.visibility = "hidden";
@@ -50,10 +57,46 @@ function checkMatch() {
         matchedPairs++;
         document.getElementById('pairs').textContent = matchedPairs + '/' + pairs;
 
+        // Play correct sound
+        if (audioSettings.soundEnabled) {
+            const correctSound = new Audio('../Audio/correct.mp3');
+            correctSound.volume = audioSettings.soundVolume / 100;
+            correctSound.play().catch(e => console.log('Audio playback prevented'));
+        }
+        // Show  message
+        const randomIndex = Math.floor(Math.random() * characterMessages.length);
+        const message = characterMessages[randomIndex];
+        messageText.textContent = message;
+        messageBubble.classList.remove('hidden');
+        
+
+        setTimeout(() => {
+            messageBubble.classList.add('hidden');
+        }, 3000);
+
         if (matchedPairs === pairs) {
             endGame();
         }
+
+        
     } else {
+        // Play error sound
+        if (audioSettings.soundEnabled) {
+            const errorSound = new Audio('../Audio/error.mp3');
+            errorSound.volume = audioSettings.soundVolume / 100;
+            errorSound.play().catch(e => console.log('Audio playback prevented'));
+        }
+
+        // Show failure message
+        const randomIndex = Math.floor(Math.random() * failureMessages.length);
+        const message = failureMessages[randomIndex];
+        messageText.textContent = message;
+        messageBubble.classList.remove('hidden');
+        
+        setTimeout(() => {
+            messageBubble.classList.add('hidden');
+        }, 3000);
+
         card1.classList.remove("flipped");
         card2.classList.remove("flipped");
 
@@ -113,6 +156,13 @@ function pauseTimer() {
 // 1. when the user click Pause button
 document.getElementById('pause-btn')?.addEventListener('click', handlePause);
 function handlePause(){
+    // Play click sound
+    if (audioSettings.soundEnabled) {
+        const clickSound = new Audio('../Audio/clickselect.mp3');
+        clickSound.volume = audioSettings.soundVolume / 100;
+        clickSound.play().catch(e => console.log('Audio playback prevented'));
+    }
+
     // 1-1. remove 'hidden' class from 'pause-overlay'
     document.getElementById('pause-overlay').classList.remove('hidden');
     // 1-2. stop timer and change value (isPaused=true)
@@ -229,6 +279,13 @@ function calculateStars(timeMs, moves, pairs) {
 let selectedDifficulty = null;
 
 function selectDifficulty(difficulty) {
+    // Play click sound
+    // if (audioSettings.soundEnabled) {
+    //     const clickSound = new Audio('./Audio/clickselect.mp3');
+    //     clickSound.volume = audioSettings.soundVolume / 100;
+    //     clickSound.play().catch(e => console.log('Audio playback prevented'));
+    // }
+
     selectedDifficulty = difficulty;
     
     // Remove selected class from all buttons
@@ -238,7 +295,14 @@ function selectDifficulty(difficulty) {
     
     // Add selected class to clicked button
     event.target.closest('.difficulty-btn').classList.add('selected');
-    
+    //Play click sound
+        if (audioSettings.soundEnabled) {
+            const clickSound = new Audio('./Audio/clickselect.mp3');
+            clickSound.volume = audioSettings.soundVolume / 100;
+            clickSound.play().catch(e => console.log('Audio playback prevented'));
+        }
+
+        // 
     // Enable start button
     document.getElementById('startBtn').disabled = false;
 }
@@ -246,10 +310,18 @@ function selectDifficulty(difficulty) {
 function startGame() {
     if (selectedDifficulty) {
         // Store difficulty in sessionStorage for the game to use
-        sessionStorage.setItem('gameDifficulty', selectedDifficulty);
+       
         // You can navigate to the game page or initialize the game here
        // alert(`Starting ${selectedDifficulty} game!`);
+        if (audioSettings.soundEnabled) {
+            const clickSound = new Audio('./Audio/clickselect.mp3');
+            clickSound.volume = audioSettings.soundVolume / 100;
+            clickSound.play().catch(e => console.log('Audio playback prevented'));
+        }
+        sessionStorage.setItem('gameDifficulty', selectedDifficulty);
+
         window.location.href = './pages/game-normal-mode.html'; // Uncomment when you have a game page
+       
     }
 }
 
@@ -275,12 +347,26 @@ function loadSettings() {
     
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
+            // Play click sound
+            if (audioSettings.soundEnabled) {
+                const clickSound = new Audio('./Audio/clickselect.mp3');
+                clickSound.volume = audioSettings.soundVolume / 100;
+                clickSound.play().catch(e => console.log('Audio playback prevented'));
+            }
             window.location.href = './pages/settings.html';
         });
     }
     
     if (creditsBtn) {
-        creditsBtn.addEventListener('click', openCredits);
+        creditsBtn.addEventListener('click', () => {
+            // Play click sound
+            if (audioSettings.soundEnabled) {
+                const clickSound = new Audio('./Audio/clickselect.mp3');
+                clickSound.volume = audioSettings.soundVolume / 100;
+                clickSound.play().catch(e => console.log('Audio playback prevented'));
+            }
+            openCredits();
+        });
     }
 }
 
@@ -351,14 +437,14 @@ function toggleSound() {
 
 function resetSettings() {
     audioSettings = {
-        musicVolume: 70,
-        soundVolume: 80,
+        musicVolume: 50,
+        soundVolume: 90,
         musicEnabled: true,
         soundEnabled: true
     };
     
-    localStorage.setItem('musicVolume', 70);
-    localStorage.setItem('soundVolume', 80);
+    localStorage.setItem('musicVolume', 50);
+    localStorage.setItem('soundVolume', 90);
     localStorage.setItem('musicEnabled', 'true');
     localStorage.setItem('soundEnabled', 'true');
     
@@ -368,6 +454,13 @@ function resetSettings() {
 
 function initBackgroundMusic() {
     const bgMusic = document.getElementById('backgroundMusic');
+    // Play click sound
+    if (audioSettings.soundEnabled) {
+        const clickSound = new Audio('./Audio/clickselect.mp3');
+        clickSound.volume = audioSettings.soundVolume / 100;
+        clickSound.play().catch(e => console.log('Audio playback prevented'));
+    }
+
     if (!bgMusic) return;
     
     bgMusic.volume = audioSettings.musicVolume / 100;
@@ -487,6 +580,19 @@ const characterMessages = [
     "Way to go! 🎯",
     "Impressive! 💡",
     "Excellent work! 🏆"
+];
+
+const failureMessages = [
+    "You were close! 😅",
+    "Try again! 🤔",
+    "Almost there! 💪",
+    "Not quite! 😔",
+    "Keep trying! 🔄",
+    "You'll get it next time! 🎯",
+    "Better luck next time! 🍀",
+    "So close! 📏",
+    "Don't give up! 💪",
+    "One more time! 🔁"
 ];
 
 let messageIndex = 0;
