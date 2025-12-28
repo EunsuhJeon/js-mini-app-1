@@ -1,22 +1,82 @@
 
 // Jade - start
-let gameStarted = false;
 let isPaused = false;
-let gameFinished = false;
 
 let startTime = null;
 let elapsedTime = 0;
 let timerId = null;
+
+let flippedCards = [];
+let matchedPairs = 0;
+let movements = 0;
+
+let rows, columns, pairs;
 
 window.addEventListener("DOMContentLoaded", () => {
     const currentPage = window.location.pathname;
     if (!currentPage.includes("index.html")) {
         const level = sessionStorage.getItem("gameDifficulty");
         if (level) {
+            initGame();
             startTimer();
         }
     }
 });
+
+//======= playing game - start ======
+function flipCard() {
+    if (flippedCards.includes(this)) return;
+
+    if (flippedCards.length < 2 && !this.classList.contains("flipped")) {
+        this.classList.add("flipped");
+        // this.querySelector('.card-back-emoji').style.visibility = "visible";
+        // this.querySelector('.card-front').style.visibility = "hidden";
+
+        flippedCards.push(this);
+
+        if (flippedCards.length === 2) {
+            setTimeout(checkMatch, 500);
+        }
+    }
+}
+
+function checkMatch() {
+    movements++;
+    document.getElementById('moves').textContent = movements;
+
+    const [card1, card2] = flippedCards;
+
+    if (card1.dataset.emoji === card2.dataset.emoji) {
+        matchedPairs++;
+        document.getElementById('pairs').textContent = matchedPairs + '/' + pairs;
+
+        if (matchedPairs === pairs) {
+            endGame();
+        }
+    } else {
+        card1.classList.remove("flipped");
+        card2.classList.remove("flipped");
+
+        // card1.querySelector('.card-back-emoji').style.visibility = "hidden";
+        // card1.querySelector('.card-front').style.visibility = "visible";
+        // card2.querySelector('.card-back-emoji').style.visibility = "hidden";
+        // card2.querySelector('.card-front').style.visibility = "visible";
+    }
+
+    flippedCards = [];
+}
+
+// when the user click restart
+function resetGame() {
+    matchedPairs = 0;
+    movements = 0;
+    flippedCards = [];
+    document.getElementById('moves').textContent = 0;
+    document.getElementById('pairs').textContent = '0/' + pairs;
+    createBoard();
+}
+
+//======= playing game - end ======
 
 // when the ingame page is loaded
 function startTimer() {
@@ -78,6 +138,7 @@ function handleResume(){
 // 3. when the user click Restart button
 document.getElementById('restart-btn')?.addEventListener('click', handleRestart);
 function handleRestart(){
+    document.getElementById('time').textContent = '00:00';
     // 3-1. add 'hidden' to 
     document.getElementById('pause-overlay').classList.add('hidden');
     isPaused = false;
@@ -85,6 +146,7 @@ function handleRestart(){
     // 3-2. reset
     elapsedTime = 0;
     // 3-3. start timer
+    initGame();
     startTimer();
 }
 
@@ -111,6 +173,8 @@ function endGame() {
     
     // 1-4. update UI
     document.getElementById('result-time').textContent = renderTime(elapsedTime);
+    document.getElementById('result-moves').textContent = movements;
+    document.getElementById('result-difficulty').textContent = sessionStorage.getItem("gameDifficulty");
 }
 
 // 2. when the user click Play Again button
@@ -119,6 +183,11 @@ function handlePlayAgain(){
     // 2-1. add 'hidden' class to result
     document.getElementById('result-overlay').classList.add('hidden');
     // 2-2. call function - game start
+    document.getElementById('time').textContent = '00:00';
+    isPaused = false;
+    elapsedTime = 0;
+    initGame();
+    startTimer();
 }
 
 // 3. when the user click Home button
@@ -315,7 +384,13 @@ window.addEventListener('click', (e) => {
 
 
 // Santiago - start
-document.addEventListener('DOMContentLoaded', () => {
+// document.addEventListener('DOMContentLoaded', () => {
+function initGame(){
+    movements = 0;
+    matchedPairs = 0;
+
+    document.getElementById('moves').textContent = movements;
+
     const board = document.getElementById('board');
     if (!board) return;
 
@@ -325,7 +400,7 @@ document.addEventListener('DOMContentLoaded', () => {
     ];
 
     let difficulty = sessionStorage.getItem("gameDifficulty") || "easy";
-    let rows, columns, pairs;
+    
 
     switch(difficulty){
         case "easy":
@@ -343,6 +418,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const totalCards = pairs*2;
 
+    board.innerHTML = '';
+
     board.style.gridTemplateColumns = `repeat(${columns}, var(--card-width))`;
     board.style.gridTemplateRows = `repeat(${rows}, var(--card-height))`;
 
@@ -358,15 +435,21 @@ document.addEventListener('DOMContentLoaded', () => {
     cardImages.forEach(emoji => {
         const card = document.createElement('div');
         card.classList.add('card');
+        card.dataset.emoji = emoji;
+
         card.innerHTML = `
             <div class="card-inner">
                 <div class="card-front">?</div>
                 <div class="card-back"><span class="card-back-emoji">${emoji}</span></div>
             </div>`;
-        card.addEventListener('click', () => card.classList.toggle('flipped'));
+        // card.addEventListener('click', () => card.classList.toggle('flipped'));
+        card.addEventListener("click", flipCard);
         board.appendChild(card);
     });
-});
+
+    document.getElementById('pairs').textContent = '0/' + pairs;
+// });
+};
 // Santiago - end
 
 // GIF Character Messages - Caracteres con mensajes
