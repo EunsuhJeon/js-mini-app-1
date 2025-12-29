@@ -13,13 +13,16 @@ let movements = 0;
 let rows, columns, pairs;
 
 window.addEventListener("DOMContentLoaded", () => {
+    const board = document.getElementById('board');
+    if (!board) return;
+
     const currentPage = window.location.pathname;
     if (!currentPage.includes("index.html")) {
-        const level = sessionStorage.getItem("gameDifficulty");
-        if (level) {
-            initGame();
-            startTimer();
-        }
+        const level = sessionStorage.getItem("gameDifficulty") || "easy";
+        sessionStorage.setItem("gameDifficulty", level);
+
+        initGame();
+        startTimer();
     }
 });
 
