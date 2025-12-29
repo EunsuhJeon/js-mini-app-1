@@ -292,6 +292,8 @@ function selectDifficulty(event, difficulty) {
     document.getElementById('startBtn').disabled = false;
 }
 
+document.getElementById('startBtn')?.addEventListener('click', startGame);
+
 function startGame() {
     if (selectedDifficulty) {
         // Store difficulty in sessionStorage for the game to use
