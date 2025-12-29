@@ -150,7 +150,6 @@ body{
   z-index: 1;
 }
 
-
 .card-front{
   color: white;
 }
@@ -162,6 +161,15 @@ body{
 .card-front{
   text-shadow: 0 2px 6px rgba(0,0,0,.6);
 }
+
+.card-front span {
+  transition: opacity .3s ease;
+}
+
+.card.flipped .card-front span {
+  opacity: 0;
+}
+
 /* FRONT SIDE (emoji) */
 .card-back{
   background: rgba(255,255,255,.08);

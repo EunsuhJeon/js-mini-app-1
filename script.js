@@ -262,14 +262,11 @@ function calculateStars(timeMs, moves, pairs) {
 
 let selectedDifficulty = null;
 
-function selectDifficulty(difficulty) {
-    // Play click sound
-    // if (audioSettings.soundEnabled) {
-    //     const clickSound = new Audio('./Audio/clickselect.mp3');
-    //     clickSound.volume = audioSettings.soundVolume / 100;
-    //     clickSound.play().catch(e => console.log('Audio playback prevented'));
-    // }
+document.querySelectorAll('.difficulty-btn').forEach(btn => {
+    btn.addEventListener('click', (e) => selectDifficulty(e, btn.dataset.difficulty));
+});
 
+function selectDifficulty(event, difficulty) {
     selectedDifficulty = difficulty;
     
     // Remove selected class from all buttons
@@ -278,15 +275,15 @@ function selectDifficulty(difficulty) {
     });
     
     // Add selected class to clicked button
-    event.target.closest('.difficulty-btn').classList.add('selected');
-    //Play click sound
-        if (audioSettings.soundEnabled) {
-            const clickSound = new Audio('./Audio/clickselect.mp3');
-            clickSound.volume = audioSettings.soundVolume / 100;
-            clickSound.play().catch(e => console.log('Audio playback prevented'));
-        }
+    event.currentTarget.classList.add('selected');
 
-        // 
+    // Play click sound
+    if (audioSettings.soundEnabled) {
+        const clickSound = new Audio('./Audio/clickselect.mp3');
+        clickSound.volume = audioSettings.soundVolume / 100;
+        clickSound.play().catch(e => console.log('Audio playback prevented'));
+    }
+
     // Enable start button
     document.getElementById('startBtn').disabled = false;
 }
