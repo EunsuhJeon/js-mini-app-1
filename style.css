@@ -3,7 +3,9 @@
     margin: 0;
     padding: 0;
     box-sizing: border-box;
+   
 }
+
 
 
 /* ===== ORIGINAL STYLES ===== */
@@ -16,6 +18,7 @@
     align-items: center;
     justify-content: center;
     z-index: 9999;
+
 }
 
 .hidden {
@@ -582,6 +585,23 @@
 
 .credits-content strong {
     color: #667eea;
+}
+
+.credits-content ul {
+    list-style: none;
+    padding: 0;
+    margin: 10px 0 15px 0;
+}
+
+.credits-content li {
+    padding: 8px 0;
+    color: #b0b0b0;
+}
+
+.credits-content li:before {
+    content: "✨ ";
+    color: #667eea;
+    margin-right: 8px;
 }
 
 @keyframes slideIn {

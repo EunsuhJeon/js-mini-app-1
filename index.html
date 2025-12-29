@@ -1,11 +1,13 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Memory Game - Emoji Edition</title>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body class="home-page">
     <div class="emoji-background">
         <div class="emoji">🎮</div>
@@ -31,13 +33,14 @@
             <div class="difficulty-section">
                 <h2>Choose Difficulty:</h2>
                 <div class="difficulty-buttons">
-                    <button class="difficulty-btn" data-difficulty="easy" onclick="selectDifficulty('easy')">
+                    <button class="difficulty-btn" data-difficulty="easy" onclick="selectDifficulty('easy', event)">
                         😊 Easy
                     </button>
-                    <button class="difficulty-btn" data-difficulty="medium" onclick="selectDifficulty('medium')">
+                    <button class="difficulty-btn" data-difficulty="medium" onclick="selectDifficulty('medium', event)">
                         😐 Medium
                     </button>
-                    <button class="difficulty-btn" data-difficulty="impossible" onclick="selectDifficulty('impossible')">
+                    <button class="difficulty-btn" data-difficulty="impossible"
+                        onclick="selectDifficulty('impossible', event)">
                         😤 Impossible
                     </button>
                 </div>
@@ -57,10 +60,16 @@
                 <button class="close-btn" onclick="closeCredits()">&times;</button>
             </div>
             <div class="credits-content">
-                <p><strong>Game Developer:</strong> José</p>
+                <p><strong>Game Developers:</strong></p>
+                <ul>
+                    <li>Santiago</li>
+                    <li>Jade</li>
+                    <li>Jose</li>
+                </ul>
+
                 <p><strong>Version:</strong> 1.0</p>
                 <p><strong>Created with:</strong> HTML, CSS & JavaScript</p>
-                <p>Thank you for playing!</p>
+                <p>🙏 Thank you for playing! 🎮</p>
             </div>
         </div>
     </div>
@@ -72,4 +81,5 @@
 
     <script src="./script.js"></script>
 </body>
+
 </html>
