@@ -68,7 +68,7 @@ function checkMatch() {
         const message = characterMessages[randomIndex];
         messageText.textContent = message;
         messageBubble.classList.remove('hidden');
-        
+
 
         setTimeout(() => {
             messageBubble.classList.add('hidden');
@@ -78,7 +78,7 @@ function checkMatch() {
             endGame();
         }
 
-        
+
     } else {
         // Play error sound
         if (audioSettings.soundEnabled) {
@@ -92,7 +92,7 @@ function checkMatch() {
         const message = failureMessages[randomIndex];
         messageText.textContent = message;
         messageBubble.classList.remove('hidden');
-        
+
         setTimeout(() => {
             messageBubble.classList.add('hidden');
         }, 3000);
@@ -145,7 +145,7 @@ function renderTime(ms) {
 }
 
 function pauseTimer() {
-    if(!isPaused) return;
+    if (!isPaused) return;
     clearInterval(timerId);
     elapsedTime = Date.now() - startTime;
 }
@@ -155,7 +155,7 @@ function pauseTimer() {
 // ===========
 // 1. when the user click Pause button
 document.getElementById('pause-btn')?.addEventListener('click', handlePause);
-function handlePause(){
+function handlePause() {
     // Play click sound
     if (audioSettings.soundEnabled) {
         const clickSound = new Audio('../Audio/clickselect.mp3');
@@ -177,7 +177,7 @@ function handlePause(){
 
 // 2. when the user click Resume button
 document.getElementById('resume-btn')?.addEventListener('click', handleResume);
-function handleResume(){
+function handleResume() {
     // 2-1. add 'hidden' class to 'pause-overlay'
     document.getElementById('pause-overlay').classList.add('hidden');
     // 2-2. restart timer
@@ -187,7 +187,7 @@ function handleResume(){
 
 // 3. when the user click Restart button
 document.getElementById('restart-btn')?.addEventListener('click', handleRestart);
-function handleRestart(){
+function handleRestart() {
     document.getElementById('time').textContent = '00:00';
     // 3-1. add 'hidden' to 
     document.getElementById('pause-overlay').classList.add('hidden');
@@ -202,7 +202,7 @@ function handleRestart(){
 
 // 4. when the user click Home button
 document.getElementById('menu-btn')?.addEventListener('click', handleMenu);
-function handleMenu(){
+function handleMenu() {
     // 4-1. go to index page
     clearInterval(timerId);
     isPaused = false;
@@ -220,7 +220,7 @@ function endGame() {
     // 1-2. make result overlay visible
     document.getElementById('result-overlay').classList.remove('hidden');
     // 1-3. call function which calculates rating
-    
+
     // 1-4. update UI
     document.getElementById('result-time').textContent = renderTime(elapsedTime);
     document.getElementById('result-moves').textContent = movements;
@@ -236,7 +236,7 @@ function endGame() {
 
 // 2. when the user click Play Again button
 document.getElementById('play-again-btn')?.addEventListener('click', handlePlayAgain)
-function handlePlayAgain(){
+function handlePlayAgain() {
     // 2-1. add 'hidden' class to result
     document.getElementById('result-overlay').classList.add('hidden');
     // 2-2. call function - game start
@@ -248,8 +248,8 @@ function handlePlayAgain(){
 }
 
 // 3. when the user click Home button
-document.getElementById('result-menu-btn')?.addEventListener('click', function(){
-   window.location.href = "../index.html";
+document.getElementById('result-menu-btn')?.addEventListener('click', function () {
+    window.location.href = "../index.html";
 });
 
 function calculateStars(timeMs, moves, pairs) {
@@ -287,32 +287,32 @@ function selectDifficulty(difficulty) {
     // }
 
     selectedDifficulty = difficulty;
-    
+
     // Remove selected class from all buttons
     document.querySelectorAll('.difficulty-btn').forEach(btn => {
         btn.classList.remove('selected');
     });
-    
+
     // Add selected class to clicked button
     event.target.closest('.difficulty-btn').classList.add('selected');
     //Play click sound
-        if (audioSettings.soundEnabled) {
-            const clickSound = new Audio('./Audio/clickselect.mp3');
-            clickSound.volume = audioSettings.soundVolume / 100;
-            clickSound.play().catch(e => console.log('Audio playback prevented'));
-        }
+    if (audioSettings.soundEnabled) {
+        const clickSound = new Audio('./Audio/clickselect.mp3');
+        clickSound.volume = audioSettings.soundVolume / 100;
+        clickSound.play().catch(e => console.log('Audio playback prevented'));
+    }
 
-        // 
+    // 
     // Enable start button
     document.getElementById('startBtn').disabled = false;
 }
-
+//prueba
 function startGame() {
     if (selectedDifficulty) {
         // Store difficulty in sessionStorage for the game to use
-       
+
         // You can navigate to the game page or initialize the game here
-       // alert(`Starting ${selectedDifficulty} game!`);
+        // alert(`Starting ${selectedDifficulty} game!`);
         if (audioSettings.soundEnabled) {
             const clickSound = new Audio('./Audio/clickselect.mp3');
             clickSound.volume = audioSettings.soundVolume / 100;
@@ -321,7 +321,7 @@ function startGame() {
         sessionStorage.setItem('gameDifficulty', selectedDifficulty);
 
         window.location.href = './pages/game-normal-mode.html'; // Uncomment when you have a game page
-       
+
     }
 }
 
@@ -344,7 +344,7 @@ window.addEventListener('DOMContentLoaded', () => {
 function loadSettings() {
     const settingsBtn = document.getElementById('settings-btn');
     const creditsBtn = document.getElementById('credits-btn');
-    
+
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
             // Play click sound
@@ -356,7 +356,7 @@ function loadSettings() {
             window.location.href = './pages/settings.html';
         });
     }
-    
+
     if (creditsBtn) {
         creditsBtn.addEventListener('click', () => {
             // Play click sound
@@ -375,21 +375,21 @@ function loadAudioSettings() {
     const soundVol = document.getElementById('soundVolume');
     const musicToggle = document.getElementById('musicToggle');
     const soundToggle = document.getElementById('soundToggle');
-    
+
     if (musicVol) {
         musicVol.value = audioSettings.musicVolume;
         document.getElementById('musicVolumeValue').textContent = audioSettings.musicVolume + '%';
     }
-    
+
     if (soundVol) {
         soundVol.value = audioSettings.soundVolume;
         document.getElementById('soundVolumeValue').textContent = audioSettings.soundVolume + '%';
     }
-    
+
     if (musicToggle) {
         musicToggle.checked = audioSettings.musicEnabled;
     }
-    
+
     if (soundToggle) {
         soundToggle.checked = audioSettings.soundEnabled;
     }
@@ -442,12 +442,12 @@ function resetSettings() {
         musicEnabled: true,
         soundEnabled: true
     };
-    
+
     localStorage.setItem('musicVolume', 50);
     localStorage.setItem('soundVolume', 90);
     localStorage.setItem('musicEnabled', 'true');
     localStorage.setItem('soundEnabled', 'true');
-    
+
     loadAudioSettings();
     alert('Settings reset to default!');
 }
@@ -462,9 +462,9 @@ function initBackgroundMusic() {
     }
 
     if (!bgMusic) return;
-    
+
     bgMusic.volume = audioSettings.musicVolume / 100;
-    
+
     if (audioSettings.musicEnabled) {
         bgMusic.play().catch(e => console.log('Autoplay prevented'));
     }
@@ -501,7 +501,7 @@ window.addEventListener('click', (e) => {
 
 // Santiago - start
 // document.addEventListener('DOMContentLoaded', () => {
-function initGame(){
+function initGame() {
     movements = 0;
     matchedPairs = 0;
 
@@ -511,14 +511,14 @@ function initGame(){
     if (!board) return;
 
     const emojis = [
-        "😈","😭","🤑","🤮","😍","😡","😂","🤯","🥶","😱","🤩","😏",
-        "😇","🤔","😴","🥳","😜","😢","😎","🤡","👻","💀","☠️","🤖"
+        "😈", "😭", "🤑", "🤮", "😍", "😡", "😂", "🤯", "🥶", "😱", "🤩", "😏",
+        "😇", "🤔", "😴", "🥳", "😜", "😢", "😎", "🤡", "👻", "💀", "☠️", "🤖"
     ];
 
     let difficulty = sessionStorage.getItem("gameDifficulty") || "easy";
-    
 
-    switch(difficulty){
+
+    switch (difficulty) {
         case "easy":
             rows = 3; columns = 4; pairs = 6; // 4x3
             break;
@@ -532,7 +532,7 @@ function initGame(){
             rows = 3; columns = 4; pairs = 6;
     }
 
-    const totalCards = pairs*2;
+    const totalCards = pairs * 2;
 
     board.innerHTML = '';
 
@@ -564,7 +564,7 @@ function initGame(){
     });
 
     document.getElementById('pairs').textContent = '0/' + pairs;
-// });
+    // });
 };
 // Santiago - end
 
@@ -613,11 +613,11 @@ function showRandomMessage() {
     // Get random message
     const randomIndex = Math.floor(Math.random() * characterMessages.length);
     const message = characterMessages[randomIndex];
-    
+
     // Display message
     messageText.textContent = message;
     messageBubble.classList.remove('hidden');
-    
+
     // Hide message after 3 seconds
     setTimeout(() => {
         messageBubble.classList.add('hidden');
