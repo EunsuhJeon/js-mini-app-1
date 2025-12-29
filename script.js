@@ -540,7 +540,7 @@ function initGame(){
 
         card.innerHTML = `
             <div class="card-inner">
-                <div class="card-front">?</div>
+                <div class="card-front"><span>?</span></div>
                 <div class="card-back"><span class="card-back-emoji">${emoji}</span></div>
             </div>`;
         // card.addEventListener('click', () => card.classList.toggle('flipped'));
