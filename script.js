@@ -51,24 +51,28 @@ function checkMatch() {
     movements++;
     document.getElementById('moves').textContent = movements;
 
-    const [card1, card2] = flippedCards;
+    let isMatch = true;
 
-    if (card1.dataset.emoji === card2.dataset.emoji) {
+    for (let i = 1; i < flippedCards.length; i++) {
+        if (flippedCards[i].dataset.emoji !== flippedCards[0].dataset.emoji) {
+            isMatch = false;
+            break;
+        }
+    }
+
+    if (isMatch) {
         matchedPairs++;
         document.getElementById('pairs').textContent = matchedPairs + '/' + pairs;
 
-        // Play correct sound
         if (audioSettings.soundEnabled) {
             const correctSound = new Audio('../Audio/correct.mp3');
             correctSound.volume = audioSettings.soundVolume / 100;
             correctSound.play().catch(e => console.log('Audio playback prevented'));
         }
-        // Show  message
-        const randomIndex = Math.floor(Math.random() * characterMessages.length);
-        const message = characterMessages[randomIndex];
+
+        const message = characterMessages[Math.floor(Math.random() * characterMessages.length)];
         messageText.textContent = message;
         messageBubble.classList.remove('hidden');
-        
 
         setTimeout(() => {
             messageBubble.classList.add('hidden');
@@ -77,46 +81,27 @@ function checkMatch() {
         if (matchedPairs === pairs) {
             endGame();
         }
-
-        
     } else {
-        // Play error sound
         if (audioSettings.soundEnabled) {
             const errorSound = new Audio('../Audio/error.mp3');
             errorSound.volume = audioSettings.soundVolume / 100;
             errorSound.play().catch(e => console.log('Audio playback prevented'));
         }
 
-        // Show failure message
-        const randomIndex = Math.floor(Math.random() * failureMessages.length);
-        const message = failureMessages[randomIndex];
+        const message = failureMessages[Math.floor(Math.random() * failureMessages.length)];
         messageText.textContent = message;
         messageBubble.classList.remove('hidden');
-        
+
         setTimeout(() => {
             messageBubble.classList.add('hidden');
         }, 3000);
 
-        card1.classList.remove("flipped");
-        card2.classList.remove("flipped");
-
-        // card1.querySelector('.card-back-emoji').style.visibility = "hidden";
-        // card1.querySelector('.card-front').style.visibility = "visible";
-        // card2.querySelector('.card-back-emoji').style.visibility = "hidden";
-        // card2.querySelector('.card-front').style.visibility = "visible";
+        for (let card of flippedCards) {
+            card.classList.remove('flipped');
+        }
     }
 
     flippedCards = [];
-}
-
-// when the user click restart
-function resetGame() {
-    matchedPairs = 0;
-    movements = 0;
-    flippedCards = [];
-    document.getElementById('moves').textContent = 0;
-    document.getElementById('pairs').textContent = '0/' + pairs;
-    createBoard();
 }
 
 //======= playing game - end ======
