@@ -13,11 +13,9 @@ let rows, columns, pairs;
 
 window.addEventListener("DOMContentLoaded", () => {
     const board = document.getElementById('board');
-    if (!board) return;
-
-    const currentPage = window.location.pathname;
-    if (!currentPage.includes("index.html")) {
-        const level = sessionStorage.getItem("gameDifficulty") || "easy";
+    if (board) {
+        const urlParams = new URLSearchParams(window.location.search);
+        let level = urlParams.get('level') || sessionStorage.getItem("gameDifficulty") || "easy";
         sessionStorage.setItem("gameDifficulty", level);
 
         initGame();
@@ -25,12 +23,11 @@ window.addEventListener("DOMContentLoaded", () => {
     }
 });
 
-//======= playing game - start ======
+// ===== Playing Game =====
 function flipCard() {
     if (flippedCards.includes(this)) return;
 
     if (flippedCards.length < 2 && !this.classList.contains("flipped")) {
-        // Play click sound
         if (audioSettings.soundEnabled) {
             const clickSound = new Audio('../Audio/clickselect.mp3');
             clickSound.volume = audioSettings.soundVolume / 100;
@@ -38,9 +35,6 @@ function flipCard() {
         }
 
         this.classList.add("flipped");
-        // this.querySelector('.card-back-emoji').style.visibility = "visible";
-        // this.querySelector('.card-front').style.visibility = "hidden";
-
         flippedCards.push(this);
 
         if (flippedCards.length === 2) {
@@ -53,14 +47,7 @@ function checkMatch() {
     movements++;
     document.getElementById('moves').textContent = movements;
 
-    let isMatch = true;
-
-    for (let i = 1; i < flippedCards.length; i++) {
-        if (flippedCards[i].dataset.emoji !== flippedCards[0].dataset.emoji) {
-            isMatch = false;
-            break;
-        }
-    }
+    let isMatch = flippedCards.every(card => card.dataset.emoji === flippedCards[0].dataset.emoji);
 
     if (isMatch) {
         matchedPairs++;
@@ -75,17 +62,11 @@ function checkMatch() {
         const message = characterMessages[Math.floor(Math.random() * characterMessages.length)];
         messageText.textContent = message;
         messageBubble.classList.remove('hidden');
-
-
-        setTimeout(() => {
-            messageBubble.classList.add('hidden');
-        }, 3000);
+        setTimeout(() => messageBubble.classList.add('hidden'), 3000);
 
         if (matchedPairs === pairs) {
             endGame();
         }
-
-
     } else {
         if (audioSettings.soundEnabled) {
             const errorSound = new Audio('../Audio/error.mp3');
@@ -96,42 +77,31 @@ function checkMatch() {
         const message = failureMessages[Math.floor(Math.random() * failureMessages.length)];
         messageText.textContent = message;
         messageBubble.classList.remove('hidden');
+        setTimeout(() => messageBubble.classList.add('hidden'), 3000);
 
-        setTimeout(() => {
-            messageBubble.classList.add('hidden');
-        }, 3000);
-
-        for (let card of flippedCards) {
-            card.classList.remove('flipped');
-        }
+        flippedCards.forEach(card => card.classList.remove('flipped'));
     }
 
     flippedCards = [];
 }
 
-//======= playing game - end ======
-
-// when the ingame page is loaded
+// ===== Timer =====
 function startTimer() {
     startTime = Date.now() - elapsedTime;
-    timerId = setInterval(updateTimer, 1000); // every second
+    timerId = setInterval(updateTimer, 1000);
 }
 
 function updateTimer() {
-    elapsedTime = Date.now() - startTime
+    elapsedTime = Date.now() - startTime;
     document.getElementById('time').textContent = renderTime(elapsedTime);
 }
 
-// update timer in game every second
 function renderTime(ms) {
     const totalSeconds = Math.floor(ms / 1000);
     const minutes = Math.floor(totalSeconds / 60);
     const seconds = totalSeconds % 60;
 
-    const formattedMinutes = String(minutes).padStart(2, '0');
-    const formattedSeconds = String(seconds).padStart(2, '0');
-
-    return `${formattedMinutes}:${formattedSeconds}`;
+    return `${String(minutes).padStart(2,'0')}:${String(seconds).padStart(2,'0')}`;
 }
 
 function pauseTimer() {
@@ -140,96 +110,71 @@ function pauseTimer() {
     elapsedTime = Date.now() - startTime;
 }
 
-// ===========
-// == Pause ==
-// ===========
-// 1. when the user click Pause button
+// ===== Pause =====
 document.getElementById('pause-btn')?.addEventListener('click', handlePause);
 function handlePause() {
-    // Play click sound
     if (audioSettings.soundEnabled) {
         const clickSound = new Audio('../Audio/clickselect.mp3');
         clickSound.volume = audioSettings.soundVolume / 100;
         clickSound.play().catch(e => console.log('Audio playback prevented'));
     }
 
-    // 1-1. remove 'hidden' class from 'pause-overlay'
     document.getElementById('pause-overlay').classList.remove('hidden');
-    // 1-2. stop timer and change value (isPaused=true)
     isPaused = true;
     pauseTimer();
-    // 1-3. update UI (elapsed time, difficulty ...)
-    // document.getElementById('pause-difficulty').textContent = '난이도';
     document.getElementById('pause-time').textContent = renderTime(elapsedTime);
     document.getElementById('pause-difficulty').textContent = sessionStorage.getItem("gameDifficulty");
 }
 
-
-// 2. when the user click Resume button
 document.getElementById('resume-btn')?.addEventListener('click', handleResume);
 function handleResume() {
-    // 2-1. add 'hidden' class to 'pause-overlay'
     document.getElementById('pause-overlay').classList.add('hidden');
-    // 2-2. restart timer
     startTimer();
     isPaused = false;
 }
 
-// 3. when the user click Restart button
 document.getElementById('restart-btn')?.addEventListener('click', handleRestart);
 function handleRestart() {
     document.getElementById('time').textContent = '00:00';
-    // 3-1. add 'hidden' to 
     document.getElementById('pause-overlay').classList.add('hidden');
     isPaused = false;
-    // call the function - game start
-    // 3-2. reset
     elapsedTime = 0;
-    // 3-3. start timer
     initGame();
     startTimer();
 }
 
-// 4. when the user click Home button
 document.getElementById('menu-btn')?.addEventListener('click', handleMenu);
 function handleMenu() {
-    // 4-1. go to index page
     clearInterval(timerId);
     isPaused = false;
     window.location.href = "../index.html";
 }
 
-
-// ============
-// == Result ==
-// ============
-// 1. When the game finish
+// ===== Result =====
 function endGame() {
-    // 1-1. Stop timer
     clearInterval(timerId);
-    // 1-2. make result overlay visible
     document.getElementById('result-overlay').classList.remove('hidden');
-    // 1-3. call function which calculates rating
 
-    // 1-4. update UI
     document.getElementById('result-time').textContent = renderTime(elapsedTime);
     document.getElementById('result-moves').textContent = movements;
     document.getElementById('result-difficulty').textContent = sessionStorage.getItem("gameDifficulty");
 
-    let starsCount = calculateStars(elapsedTime, movements, pairs);
+    const starsCount = calculateStars(elapsedTime, movements, pairs);
     let stars = '';
-    for (let index = 0; index < starsCount; index++) {
-        stars += '⭐️';
-    }
+    for (let i = 0; i < starsCount; i++) stars += '⭐️';
     document.getElementById('result-rating').textContent = stars;
+
+    let resultMessage = '';
+    if (starsCount === 3) resultMessage = "Godlike";
+    else if (starsCount === 2) resultMessage = "Good job";
+    else resultMessage = "You can do it better";
+
+    document.querySelector('.result-title').textContent = resultMessage;
 }
 
-// 2. when the user click Play Again button
-document.getElementById('play-again-btn')?.addEventListener('click', handlePlayAgain)
+document.getElementById('play-again-btn')?.addEventListener('click', handlePlayAgain);
 function handlePlayAgain() {
-    // 2-1. add 'hidden' class to result
     document.getElementById('result-overlay').classList.add('hidden');
-    // 2-2. call function - game start
     document.getElementById('time').textContent = '00:00';
     isPaused = false;
     elapsedTime = 0;
@@ -237,8 +182,7 @@ function handlePlayAgain() {
     startTimer();
 }
 
-// 3. when the user click Home button
-document.getElementById('result-menu-btn')?.addEventListener('click', function () {
+document.getElementById('result-menu-btn')?.addEventListener('click', () => {
     window.location.href = "../index.html";
 });
 
@@ -258,62 +202,36 @@ function calculateStars(timeMs, moves, pairs) {
     return stars;
 }
 
-// Jade - end
-
-
-// Jose - start
-//======================
-//== select level ==
-//======================
-
+// ===== Difficulty Selection =====
 let selectedDifficulty = null;
 
-document.querySelectorAll('.difficulty-btn').forEach(btn => {
-    btn.addEventListener('click', (e) => selectDifficulty(e, btn.dataset.difficulty));
-});
-
-function selectDifficulty(event, difficulty) {
+function selectDifficulty(difficulty, event) {
     selectedDifficulty = difficulty;
-
-    // Remove selected class from all buttons
-    document.querySelectorAll('.difficulty-btn').forEach(btn => {
-        btn.classList.remove('selected');
-    });
-
-    // Add selected class to clicked button
+    document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
     event.target.closest('.difficulty-btn').classList.add('selected');
-    //Play click sound
+
     if (audioSettings.soundEnabled) {
         const clickSound = new Audio('./Audio/clickselect.mp3');
         clickSound.volume = audioSettings.soundVolume / 100;
         clickSound.play().catch(e => console.log('Audio playback prevented'));
     }
 
-    // 
-    // Enable start button
     document.getElementById('startBtn').disabled = false;
 }
-//prueba
+
 function startGame() {
     if (selectedDifficulty) {
-        // Store difficulty in sessionStorage for the game to use
-
-        // You can navigate to the game page or initialize the game here
-        // alert(`Starting ${selectedDifficulty} game!`);
         if (audioSettings.soundEnabled) {
             const clickSound = new Audio('./Audio/clickselect.mp3');
             clickSound.volume = audioSettings.soundVolume / 100;
             clickSound.play().catch(e => console.log('Audio playback prevented'));
         }
         sessionStorage.setItem('gameDifficulty', selectedDifficulty);
-
-        window.location.href = './pages/game-normal-mode.html'; // Uncomment when you have a game page
-
+        window.location.href = './pages/game-normal-mode.html?level=' + selectedDifficulty;
     }
 }
 
-// ===== SETTINGS & CREDITS FUNCTIONS =====
-// Audio Settings
+// ===== Settings & Audio =====
 let audioSettings = {
     musicVolume: localStorage.getItem('musicVolume') || 70,
     soundVolume: localStorage.getItem('soundVolume') || 80,
@@ -321,7 +239,6 @@ let audioSettings = {
     soundEnabled: localStorage.getItem('soundEnabled') !== 'false'
 };
 
-// Load settings on page load
 window.addEventListener('DOMContentLoaded', () => {
     loadSettings();
     loadAudioSettings();
@@ -334,7 +251,6 @@ function loadSettings() {
 
     if (settingsBtn) {
         settingsBtn.addEventListener('click', () => {
-            // Play click sound
             if (audioSettings.soundEnabled) {
                 const clickSound = new Audio('./Audio/clickselect.mp3');
                 clickSound.volume = audioSettings.soundVolume / 100;
@@ -346,7 +262,6 @@ function loadSettings() {
 
     if (creditsBtn) {
         creditsBtn.addEventListener('click', () => {
-            // Play click sound
             if (audioSettings.soundEnabled) {
                 const clickSound = new Audio('./Audio/clickselect.mp3');
                 clickSound.volume = audioSettings.soundVolume / 100;
@@ -373,13 +288,8 @@ function loadAudioSettings() {
         document.getElementById('soundVolumeValue').textContent = audioSettings.soundVolume + '%';
     }
 
-    if (musicToggle) {
-        musicToggle.checked = audioSettings.musicEnabled;
-    }
-
-    if (soundToggle) {
-        soundToggle.checked = audioSettings.soundEnabled;
-    }
+    if (musicToggle) musicToggle.checked = audioSettings.musicEnabled;
+    if (soundToggle) soundToggle.checked = audioSettings.soundEnabled;
 }
 
 function updateMusicVolume(value) {
@@ -387,17 +297,13 @@ function updateMusicVolume(value) {
     localStorage.setItem('musicVolume', value);
     document.getElementById('musicVolumeValue').textContent = value + '%';
     const bgMusic = document.getElementById('backgroundMusic');
-    if (bgMusic) {
-        bgMusic.volume = value / 100;
-    }
-    console.log('Music volume set to:', value + '%');
+    if (bgMusic) bgMusic.volume = value / 100;
 }
 
 function updateSoundVolume(value) {
     audioSettings.soundVolume = value;
     localStorage.setItem('soundVolume', value);
     document.getElementById('soundVolumeValue').textContent = value + '%';
-    console.log('Sound effects volume set to:', value + '%');
 }
 
 function toggleMusic() {
@@ -405,93 +311,53 @@ function toggleMusic() {
     audioSettings.musicEnabled = isEnabled;
     localStorage.setItem('musicEnabled', isEnabled);
     const bgMusic = document.getElementById('backgroundMusic');
-    if (bgMusic) {
-        if (isEnabled) {
-            bgMusic.play().catch(e => console.log('Autoplay prevented'));
-        } else {
-            bgMusic.pause();
-        }
-    }
-    console.log('Music', isEnabled ? 'enabled' : 'disabled');
+    if (bgMusic) isEnabled ? bgMusic.play().catch(e => console.log('Autoplay prevented')) : bgMusic.pause();
 }
 
 function toggleSound() {
     const isEnabled = document.getElementById('soundToggle').checked;
     audioSettings.soundEnabled = isEnabled;
     localStorage.setItem('soundEnabled', isEnabled);
-    console.log('Sound effects', isEnabled ? 'enabled' : 'disabled');
 }
 
 function resetSettings() {
-    audioSettings = {
-        musicVolume: 50,
-        soundVolume: 90,
-        musicEnabled: true,
-        soundEnabled: true
-    };
-
+    audioSettings = { musicVolume: 50, soundVolume: 90, musicEnabled: true, soundEnabled: true };
     localStorage.setItem('musicVolume', 50);
     localStorage.setItem('soundVolume', 90);
     localStorage.setItem('musicEnabled', 'true');
     localStorage.setItem('soundEnabled', 'true');
-
     loadAudioSettings();
     alert('Settings reset to default!');
 }
 
 function initBackgroundMusic() {
     const bgMusic = document.getElementById('backgroundMusic');
-    // Play click sound
-    if (audioSettings.soundEnabled) {
-        const clickSound = new Audio('./Audio/clickselect.mp3');
-        clickSound.volume = audioSettings.soundVolume / 100;
-        clickSound.play().catch(e => console.log('Audio playback prevented'));
-    }
-
     if (!bgMusic) return;
-
     bgMusic.volume = audioSettings.musicVolume / 100;
-
-    if (audioSettings.musicEnabled) {
-        bgMusic.play().catch(e => console.log('Autoplay prevented'));
-    }
+    if (audioSettings.musicEnabled) bgMusic.play().catch(e => console.log('Autoplay prevented'));
 }
 
-function goBack() {
-    window.location.href = '../index.html';
-}
+function goBack() { window.location.href = '../index.html'; }
 
 function openCredits() {
     const overlay = document.getElementById('creditsOverlay');
-    if (overlay) {
-        overlay.classList.remove('hidden');
-    }
+    if (overlay) overlay.classList.remove('hidden');
 }
 
 function closeCredits() {
     const overlay = document.getElementById('creditsOverlay');
-    if (overlay) {
-        overlay.classList.add('hidden');
-    }
+    if (overlay) overlay.classList.add('hidden');
 }
 
-// Close credits overlay when clicking outside
 window.addEventListener('click', (e) => {
     const overlay = document.getElementById('creditsOverlay');
-    if (overlay && e.target === overlay) {
-        closeCredits();
-    }
+    if (overlay && e.target === overlay) closeCredits();
 });
-// Jose - end
 
-
-
-// Santiago - start
-// document.addEventListener('DOMContentLoaded', () => {
+// ===== Game Initialization =====
 function initGame() {
     movements = 0;
     matchedPairs = 0;
-
     document.getElementById('moves').textContent = movements;
 
     const board = document.getElementById('board');
@@ -504,25 +370,14 @@ function initGame() {
 
     let difficulty = sessionStorage.getItem("gameDifficulty") || "easy";
 
-
-    switch (difficulty) {
-        case "easy":
-            rows = 3; columns = 4; pairs = 6; // 4x3
-            break;
-        case "medium":
-            rows = 3; columns = 6; pairs = 9; // 6x3
-            break;
-        case "impossible":
-            rows = 3; columns = 10; pairs = 15; // 10x3
-            break;
-        default:
-            rows = 3; columns = 4; pairs = 6;
+    switch(difficulty){
+        case "easy": rows=3; columns=4; pairs=6; break;
+        case "medium": rows=3; columns=6; pairs=9; break;
+        case "impossible": rows=3; columns=10; pairs=15; break;
+        default: rows=3; columns=4; pairs=6;
     }
 
-    const totalCards = pairs * 2;
-
     board.innerHTML = '';
-
     board.style.gridTemplateColumns = `repeat(${columns}, var(--card-width))`;
     board.style.gridTemplateRows = `repeat(${rows}, var(--card-height))`;
 
@@ -530,8 +385,8 @@ function initGame() {
     let cardImages = [];
     selectedEmojis.forEach(emoji => { cardImages.push(emoji); cardImages.push(emoji); });
 
-    for (let i = cardImages.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
+    for (let i = cardImages.length-1; i>0; i--){
+        const j = Math.floor(Math.random()*(i+1));
         [cardImages[i], cardImages[j]] = [cardImages[j], cardImages[i]];
     }
 
@@ -539,84 +394,48 @@ function initGame() {
         const card = document.createElement('div');
         card.classList.add('card');
         card.dataset.emoji = emoji;
-
         card.innerHTML = `
             <div class="card-inner">
                 <div class="card-front"><span>?</span></div>
                 <div class="card-back"><span class="card-back-emoji">${emoji}</span></div>
             </div>`;
-        // card.addEventListener('click', () => card.classList.toggle('flipped'));
         card.addEventListener("click", flipCard);
         board.appendChild(card);
     });
 
-    document.getElementById('pairs').textContent = '0/' + pairs;
-    // });
-};
-// Santiago - end
+    document.getElementById('pairs').textContent = '0/'+pairs;
+}
 
-// GIF Character Messages - Caracteres con mensajes
+// ===== GIF Character Messages =====
 const characterMessages = [
-    "¡Great job! 🎉",
-    "You're doing amazing!",
-    "Keep going! 💪",
-    "Nice move! 👍",
-    "Awesome! ⭐",
-    "You got this! 🚀",
-    "Fantastic! 🌟",
-    "Way to go! 🎯",
-    "Impressive! 💡",
-    "Excellent work! 🏆"
+    "¡Great job! 🎉", "You're doing amazing!", "Keep going! 💪",
+    "Nice move! 👍", "Awesome! ⭐", "You got this! 🚀",
+    "Fantastic! 🌟", "Way to go! 🎯", "Impressive! 💡", "Excellent work! 🏆"
 ];
 
 const failureMessages = [
-    "You were close! 😅",
-    "Try again! 🤔",
-    "Almost there! 💪",
-    "Not quite! 😔",
-    "Keep trying! 🔄",
-    "You'll get it next time! 🎯",
-    "Better luck next time! 🍀",
-    "So close! 📏",
-    "Don't give up! 💪",
-    "One more time! 🔁"
+    "You were close! 😅", "Try again! 🤔", "Almost there! 💪",
+    "Not quite! 😔", "Keep trying! 🔄", "You'll get it next time! 🎯",
+    "Better luck next time! 🍀", "So close! 📏", "Don't give up! 💪", "One more time! 🔁"
 ];
 
-let messageIndex = 0;
-
-// Get elements
 const gifCharacter = document.getElementById('gif-character');
 const messageBubble = document.getElementById('message-bubble');
 const messageText = document.getElementById('message-text');
 
-// Click on gif to show random message
 if (gifCharacter) {
-    gifCharacter.addEventListener('click', () => {
-        showRandomMessage();
-    });
+    gifCharacter.addEventListener('click', showRandomMessage);
 }
 
 function showRandomMessage() {
-    // Get random message
     const randomIndex = Math.floor(Math.random() * characterMessages.length);
-    const message = characterMessages[randomIndex];
-
-    // Display message
-    messageText.textContent = message;
+    messageText.textContent = characterMessages[randomIndex];
     messageBubble.classList.remove('hidden');
-
-    // Hide message after 3 seconds
-    setTimeout(() => {
-        messageBubble.classList.add('hidden');
-    }, 3000);
+    setTimeout(() => messageBubble.classList.add('hidden'), 3000);
 }
 
-// Optional: Show message when game starts
 window.addEventListener('DOMContentLoaded', () => {
     if (document.getElementById('gif-character')) {
-        // Show initial message after 1 second
-        setTimeout(() => {
-            showRandomMessage();
-        }, 1000);
+        setTimeout(() => showRandomMessage(), 1000);
     }
 });
