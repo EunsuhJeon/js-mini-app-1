@@ -12,10 +12,24 @@ let movements = 0;
 let rows, columns, pairs;
 
 window.addEventListener("DOMContentLoaded", () => {
+    // Check if we're on the game page by looking for the board element
     const board = document.getElementById('board');
     if (board) {
+        // Try to get level from URL parameter first (Firefox compatibility)
         const urlParams = new URLSearchParams(window.location.search);
-        let level = urlParams.get('level') || sessionStorage.getItem("gameDifficulty") || "easy";
+        let level = urlParams.get('level');
+
+        // Fallback to sessionStorage if URL param not present
+        if (!level) {
+            level = sessionStorage.getItem("gameDifficulty");
+        }
+
+        // If still no level, default to easy
+        if (!level) {
+            level = "easy";
+        }
+
+        // Save to sessionStorage for consistency
         sessionStorage.setItem("gameDifficulty", level);
 
         initGame();
@@ -113,6 +127,7 @@ function pauseTimer() {
 // ===== Pause =====
 document.getElementById('pause-btn')?.addEventListener('click', handlePause);
 function handlePause() {
+    // Play click sound
     if (audioSettings.soundEnabled) {
         const clickSound = new Audio('../Audio/clickselect.mp3');
         clickSound.volume = audioSettings.soundVolume / 100;
@@ -128,6 +143,7 @@ function handlePause() {
 
 document.getElementById('resume-btn')?.addEventListener('click', handleResume);
 function handleResume() {
+    // 2-1. add 'hidden' class to 'pause-overlay'
     document.getElementById('pause-overlay').classList.add('hidden');
     startTimer();
     isPaused = false;
@@ -145,6 +161,7 @@ function handleRestart() {
 
 document.getElementById('menu-btn')?.addEventListener('click', handleMenu);
 function handleMenu() {
+    // 4-1. go to index page
     clearInterval(timerId);
     isPaused = false;
     window.location.href = "../index.html";
@@ -154,7 +171,9 @@ function handleMenu() {
 function endGame() {
     clearInterval(timerId);
     document.getElementById('result-overlay').classList.remove('hidden');
+    // 1-3. call function which calculates rating
 
+    // 1-4. update UI
     document.getElementById('result-time').textContent = renderTime(elapsedTime);
     document.getElementById('result-moves').textContent = movements;
     document.getElementById('result-difficulty').textContent = sessionStorage.getItem("gameDifficulty");
@@ -163,17 +182,12 @@ function endGame() {
     let stars = '';
     for (let i = 0; i < starsCount; i++) stars += '⭐️';
     document.getElementById('result-rating').textContent = stars;
-
-    let resultMessage = '';
-    if (starsCount === 3) resultMessage = "Godlike";
-    else if (starsCount === 2) resultMessage = "Good job";
-    else resultMessage = "You can do it better";
-
-    document.querySelector('.result-title').textContent = resultMessage;
 }
 
-document.getElementById('play-again-btn')?.addEventListener('click', handlePlayAgain);
+// 2. when the user click Play Again button
+document.getElementById('play-again-btn')?.addEventListener('click', handlePlayAgain)
 function handlePlayAgain() {
+    // 2-1. add 'hidden' class to result
     document.getElementById('result-overlay').classList.add('hidden');
     document.getElementById('time').textContent = '00:00';
     isPaused = false;
@@ -182,7 +196,8 @@ function handlePlayAgain() {
     startTimer();
 }
 
-document.getElementById('result-menu-btn')?.addEventListener('click', () => {
+// 3. when the user click Home button
+document.getElementById('result-menu-btn')?.addEventListener('click', function () {
     window.location.href = "../index.html";
 });
 
@@ -206,27 +221,45 @@ function calculateStars(timeMs, moves, pairs) {
 let selectedDifficulty = null;
 
 function selectDifficulty(difficulty, event) {
-    selectedDifficulty = difficulty;
-    document.querySelectorAll('.difficulty-btn').forEach(btn => btn.classList.remove('selected'));
-    event.target.closest('.difficulty-btn').classList.add('selected');
+    // Play click sound
+    // if (audioSettings.soundEnabled) {
+    //     const clickSound = new Audio('./Audio/clickselect.mp3');
+    //     clickSound.volume = audioSettings.soundVolume / 100;
+    //     clickSound.play().catch(e => console.log('Audio playback prevented'));
+    // }
 
+    selectedDifficulty = difficulty;
+
+    // Remove selected class from all buttons
+    document.querySelectorAll('.difficulty-btn').forEach(btn => {
+        btn.classList.remove('selected');
+    });
+
+    // Add selected class to clicked button
+    event.target.closest('.difficulty-btn').classList.add('selected');
+    //Play click sound
     if (audioSettings.soundEnabled) {
         const clickSound = new Audio('./Audio/clickselect.mp3');
         clickSound.volume = audioSettings.soundVolume / 100;
         clickSound.play().catch(e => console.log('Audio playback prevented'));
     }
 
+    // 
+    // Enable start button
     document.getElementById('startBtn').disabled = false;
 }
 
 function startGame() {
     if (selectedDifficulty) {
+        // Store difficulty in sessionStorage for the game to use
         if (audioSettings.soundEnabled) {
             const clickSound = new Audio('./Audio/clickselect.mp3');
             clickSound.volume = audioSettings.soundVolume / 100;
             clickSound.play().catch(e => console.log('Audio playback prevented'));
         }
         sessionStorage.setItem('gameDifficulty', selectedDifficulty);
+
+        // Pass difficulty as URL parameter for Firefox compatibility with local files
         window.location.href = './pages/game-normal-mode.html?level=' + selectedDifficulty;
     }
 }
@@ -288,8 +321,13 @@ function loadAudioSettings() {
         document.getElementById('soundVolumeValue').textContent = audioSettings.soundVolume + '%';
     }
 
-    if (musicToggle) musicToggle.checked = audioSettings.musicEnabled;
-    if (soundToggle) soundToggle.checked = audioSettings.soundEnabled;
+    if (musicToggle) {
+        musicToggle.checked = audioSettings.musicEnabled;
+    }
+
+    if (soundToggle) {
+        soundToggle.checked = audioSettings.soundEnabled;
+    }
 }
 
 function updateMusicVolume(value) {
@@ -321,11 +359,18 @@ function toggleSound() {
 }
 
 function resetSettings() {
-    audioSettings = { musicVolume: 50, soundVolume: 90, musicEnabled: true, soundEnabled: true };
+    audioSettings = {
+        musicVolume: 50,
+        soundVolume: 90,
+        musicEnabled: true,
+        soundEnabled: true
+    };
+
     localStorage.setItem('musicVolume', 50);
     localStorage.setItem('soundVolume', 90);
     localStorage.setItem('musicEnabled', 'true');
     localStorage.setItem('soundEnabled', 'true');
+
     loadAudioSettings();
     alert('Settings reset to default!');
 }
@@ -333,8 +378,12 @@ function resetSettings() {
 function initBackgroundMusic() {
     const bgMusic = document.getElementById('backgroundMusic');
     if (!bgMusic) return;
+
     bgMusic.volume = audioSettings.musicVolume / 100;
-    if (audioSettings.musicEnabled) bgMusic.play().catch(e => console.log('Autoplay prevented'));
+
+    if (audioSettings.musicEnabled) {
+        bgMusic.play().catch(e => console.log('Autoplay prevented'));
+    }
 }
 
 function goBack() { window.location.href = '../index.html'; }
@@ -351,10 +400,16 @@ function closeCredits() {
 
 window.addEventListener('click', (e) => {
     const overlay = document.getElementById('creditsOverlay');
-    if (overlay && e.target === overlay) closeCredits();
+    if (overlay && e.target === overlay) {
+        closeCredits();
+    }
 });
+// Jose - end
 
-// ===== Game Initialization =====
+
+
+// Santiago - start
+// document.addEventListener('DOMContentLoaded', () => {
 function initGame() {
     movements = 0;
     matchedPairs = 0;
@@ -370,12 +425,22 @@ function initGame() {
 
     let difficulty = sessionStorage.getItem("gameDifficulty") || "easy";
 
-    switch(difficulty){
-        case "easy": rows=3; columns=4; pairs=6; break;
-        case "medium": rows=3; columns=6; pairs=9; break;
-        case "impossible": rows=3; columns=10; pairs=15; break;
-        default: rows=3; columns=4; pairs=6;
+
+    switch (difficulty) {
+        case "easy":
+            rows = 3; columns = 4; pairs = 6; // 4x3
+            break;
+        case "medium":
+            rows = 3; columns = 6; pairs = 9; // 6x3
+            break;
+        case "impossible":
+            rows = 3; columns = 10; pairs = 15; // 10x3
+            break;
+        default:
+            rows = 3; columns = 4; pairs = 6;
     }
+
+    const totalCards = pairs * 2;
 
     board.innerHTML = '';
     board.style.gridTemplateColumns = `repeat(${columns}, var(--card-width))`;
@@ -403,8 +468,10 @@ function initGame() {
         board.appendChild(card);
     });
 
-    document.getElementById('pairs').textContent = '0/'+pairs;
-}
+    document.getElementById('pairs').textContent = '0/' + pairs;
+    // });
+};
+// Santiago - end
 
 // ===== GIF Character Messages =====
 const characterMessages = [
@@ -429,9 +496,16 @@ if (gifCharacter) {
 
 function showRandomMessage() {
     const randomIndex = Math.floor(Math.random() * characterMessages.length);
-    messageText.textContent = characterMessages[randomIndex];
+    const message = characterMessages[randomIndex];
+
+    // Display message
+    messageText.textContent = message;
     messageBubble.classList.remove('hidden');
-    setTimeout(() => messageBubble.classList.add('hidden'), 3000);
+
+    // Hide message after 3 seconds
+    setTimeout(() => {
+        messageBubble.classList.add('hidden');
+    }, 3000);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
