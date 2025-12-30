@@ -1,4 +1,6 @@
 # js-mini-app-1
+## IMPORTANT
+Firefox is missing music & volumen settings, for complete experience use another browser.
 
 ## Team
 **Team Name: Memory Group** 
